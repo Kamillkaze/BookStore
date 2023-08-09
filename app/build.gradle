@@ -1,12 +1,7 @@
 plugins {
-    id 'java'
-    id 'jacoco'
     id 'org.springframework.boot' version '3.1.2'
     id 'io.spring.dependency-management' version '1.1.2'
-}
-
-repositories {
-    mavenCentral()
+    id 'com.bookstore.common-conventions'
 }
 
 dependencies {
@@ -14,20 +9,3 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
-
-test {
-    useJUnitPlatform()
-}
-
-jacocoTestCoverageVerification {
-    violationRules {
-        rule {
-            limit {
-                minimum = 0.93
-            }
-        }
-    }
-}
-
-check.dependsOn jacocoTestCoverageVerification
-jacocoTestReport.dependsOn test

@@ -1,31 +1,9 @@
 plugins {
     id 'java-library'
-    id 'jacoco'
-}
-
-repositories {
-    mavenCentral()
+    id 'com.bookstore.common-conventions'
 }
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb:3.1.2'
     testImplementation 'org.springframework.boot:spring-boot-starter-test:3.1.2'
 }
-
-
-test {
-    useJUnitPlatform()
-}
-
-jacocoTestCoverageVerification {
-    violationRules {
-        rule {
-            limit {
-                minimum = 0.93
-            }
-        }
-    }
-}
-
-check.dependsOn jacocoTestCoverageVerification
-jacocoTestReport.dependsOn test
