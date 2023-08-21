@@ -1,17 +1,18 @@
-package com.bookstore.model;
+package com.bookstore.dto;
 
-import com.mongodb.lang.NonNull;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 import java.util.List;
 
-@Document
-public class Book {
+public class BookDto {
 
-    Book(@NonNull String urlId, @NonNull String title, @NonNull String author, Integer stars, BigDecimal price, boolean favorite, String imageUrl, List<String> tags) {
+    public BookDto() {
+    }
+
+    BookDto(String urlId, String title, String author, Integer stars, BigDecimal price, boolean favorite, String imageUrl, List<String> tags) {
         this.urlId = urlId;
         this.title = title;
         this.author = author;
@@ -22,36 +23,29 @@ public class Book {
         this.tags = tags;
     }
 
-    @Id
-    private String id;
-    @Indexed(unique = true)
-    @NonNull
-    private final String urlId;
-    @NonNull
-    private final String title;
-    @NonNull
-    private final String author;
+    private String urlId;
+    @NotBlank(message = "Title should not be blank")
+    private String title;
+    @NotBlank(message = "Author should not be blank")
+    private String author;
     private Integer stars;
+    @NotNull(message = "Price should not be null")
+    @Min(value = 1, message = "Price should be greater or equal to 1.00")
     private BigDecimal price;
     private boolean favorite;
+    @NotNull(message = "Image should not be null")
     private String imageUrl;
     private List<String> tags;
 
-    public String getId() {
-        return id;
-    }
 
-    @NonNull
     public String getUrlId() {
         return urlId;
     }
 
-    @NonNull
     public String getTitle() {
         return title;
     }
 
-    @NonNull
     public String getAuthor() {
         return author;
     }
