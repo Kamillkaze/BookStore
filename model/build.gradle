@@ -4,6 +4,7 @@ plugins {
 }
 
 dependencies {
-    implementation libs.spring.boot.data.mongodb
+    api libs.spring.boot.data.mongodb
+    implementation libs.spring.boot.validation
     testImplementation libs.spring.boot.test
 }

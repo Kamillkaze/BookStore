@@ -6,5 +6,6 @@ plugins {
 dependencies {
     implementation project(':service')
     implementation libs.spring.boot.web
+    implementation libs.spring.boot.validation
     testImplementation libs.spring.boot.test
 }
