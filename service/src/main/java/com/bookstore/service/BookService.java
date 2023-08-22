@@ -26,10 +26,9 @@ public class BookService {
     }
 
     public List<BookDto> getAllBooks() {
-        return bookRepository.findAll()
-                .stream()
-                .map(BookMapper::toDto)
-                .toList();
+        List<Book> all = bookRepository.findAll();
+
+        return convertToBookDtoList(all);
     }
 
     public BookDto getBookById(String urlId) {
@@ -40,21 +39,20 @@ public class BookService {
     }
 
     public List<BookDto> getAllBooksByTag(String tag) {
-        return bookRepository.findAll()
-                .stream()
-                .filter(book -> book.getTags()
-                                    .stream()
-                                    .map(String::toLowerCase)
-                                    .toList()
-                                    .contains(tag.toLowerCase()))
-                .map(BookMapper::toDto)
-                .toList();
+        List<Book> foundByTag = bookRepository.findByTagsContainingIgnoreCase(tag);
+
+        return convertToBookDtoList(foundByTag);
     }
 
     public List<BookDto> getAllBooksByPhrase(String phrase) {
-        return bookRepository.findAll()
+        List<Book> foundByPhrase = bookRepository.findByTitleContainingIgnoreCase(phrase);
+
+        return convertToBookDtoList(foundByPhrase);
+    }
+
+    private List<BookDto> convertToBookDtoList(List<Book> books) {
+        return books
                 .stream()
-                .filter(book -> book.getTitle().toLowerCase().contains(phrase.toLowerCase()))
                 .map(BookMapper::toDto)
                 .toList();
     }
