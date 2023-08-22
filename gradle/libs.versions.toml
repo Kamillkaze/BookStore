@@ -1,7 +1,9 @@
 [versions]
 spring-boot = "3.1.2"
+apache-commons = "3.0"
 
 [libraries]
+apache-commons = { module = "org.apache.commons:commons-lang3", version.ref = "apache-commons"}
 spring-boot-web = { module = "org.springframework.boot:spring-boot-starter-web", version.ref = "spring-boot" }
 spring-boot-test = { module = "org.springframework.boot:spring-boot-starter-test", version.ref = "spring-boot" }
 spring-boot-data-mongodb = { module = "org.springframework.boot:spring-boot-starter-data-mongodb", version.ref = "spring-boot" }
