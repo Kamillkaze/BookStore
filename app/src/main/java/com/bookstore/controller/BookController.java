@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/books")
+@CrossOrigin(origins = "http://localhost:4200")
 public class BookController {
 
     private final BookService bookService;
@@ -18,7 +20,7 @@ public class BookController {
         this.bookService = bookService;
     }
 
-    @GetMapping("/books")
+    @GetMapping
     public ResponseEntity<List<BookDto>> getAllBooks() {
 
         List<BookDto> books = bookService.getAllBooks();
@@ -26,29 +28,29 @@ public class BookController {
         return ResponseEntity.ok(books);
     }
 
-    @GetMapping("/books/byId")
-    public ResponseEntity<BookDto> getBookById(@RequestParam(value = "urlId") String urlId) {
+    @GetMapping("/{urlId}")
+    public ResponseEntity<BookDto> getBookById(@PathVariable(value = "urlId") String urlId) {
 
         BookDto book = bookService.getBookById(urlId);
 
         return ResponseEntity.ok(book);
     }
 
-    @GetMapping("/books/byTag")
-    public ResponseEntity<List<BookDto>> getAllBooksByTag(@RequestParam(value = "tag") String tag) {
+    @GetMapping("/tag/{tag}")
+    public ResponseEntity<List<BookDto>> getAllBooksByTag(@PathVariable(value = "tag") String tag) {
         List<BookDto> allBooksByTag = bookService.getAllBooksByTag(tag);
 
         return ResponseEntity.ok(allBooksByTag);
     }
 
-    @GetMapping("/books/byPhrase")
-    public ResponseEntity<List<BookDto>> getAllBooksByPhrase(@RequestParam(value = "phrase") String phrase) {
+    @GetMapping("/phrase/{phrase}")
+    public ResponseEntity<List<BookDto>> getAllBooksByPhrase(@PathVariable(value = "phrase") String phrase) {
         List<BookDto> allBooksByPhrase = bookService.getAllBooksByPhrase(phrase);
 
         return ResponseEntity.ok(allBooksByPhrase);
     }
 
-    @PostMapping("/books")
+    @PostMapping
     public ResponseEntity<BookDto> addBook(@RequestBody @Valid BookDto bookDto) {
         BookDto returned = bookService.addBook(bookDto);
 
