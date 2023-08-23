@@ -14,15 +14,17 @@ import java.util.NoSuchElementException;
 public class BookService {
 
     private final BookRepository bookRepository;
+    private final BookMapper bookMapper;
 
-    public BookService(BookRepository bookRepository) {
+    public BookService(BookRepository bookRepository, BookMapper bookMapper) {
         this.bookRepository = bookRepository;
+        this.bookMapper = bookMapper;
     }
 
     public BookDto addBook(BookDto bookDto) throws DuplicateKeyException {
-        Book book = BookMapper.toDocument(bookDto);
+        Book book = bookMapper.toDocument(bookDto);
 
-        return BookMapper.toDto(bookRepository.insert(book));
+        return bookMapper.toDto(bookRepository.insert(book));
     }
 
     public List<BookDto> getAllBooks() {
@@ -35,7 +37,7 @@ public class BookService {
         Book byUrlId = bookRepository.findByUrlId(urlId)
                             .orElseThrow(NoSuchElementException::new);
 
-        return BookMapper.toDto(byUrlId);
+        return bookMapper.toDto(byUrlId);
     }
 
     public List<BookDto> getAllBooksByTag(String tag) {
@@ -53,7 +55,7 @@ public class BookService {
     private List<BookDto> convertToBookDtoList(List<Book> books) {
         return books
                 .stream()
-                .map(BookMapper::toDto)
+                .map(bookMapper::toDto)
                 .toList();
     }
 }

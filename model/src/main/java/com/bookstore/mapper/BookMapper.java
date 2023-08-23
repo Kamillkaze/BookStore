@@ -4,9 +4,11 @@ import com.bookstore.dto.BookDto;
 import com.bookstore.dto.BookDtoBuilder;
 import com.bookstore.model.Book;
 import com.bookstore.model.BookBuilder;
+import org.springframework.stereotype.Component;
 
+@Component
 public class BookMapper {
-    public static BookDto toDto(Book book) {
+    public BookDto toDto(Book book) {
         return new BookDtoBuilder()
                 .urlId(book.getUrlId())
                 .title(book.getTitle())
@@ -19,7 +21,7 @@ public class BookMapper {
                 .build();
     }
 
-    public static Book toDocument(BookDto dto) {
+    public Book toDocument(BookDto dto) {
         return new BookBuilder()
                 .urlId(dto.getAuthor(), dto.getTitle())
                 .title(dto.getTitle())
