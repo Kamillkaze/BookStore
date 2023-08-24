@@ -33,6 +33,15 @@ public class BookService {
         return bookMapper.toDto(inserted);
     }
 
+    public BookDto deleteABook(String urlId) {
+        Book deleted = bookRepository.deleteByUrlId(urlId)
+                .orElseThrow(NoSuchElementException::new);
+        deleted.getTags()
+                .forEach(tagService::decrementTagCount);
+
+        return bookMapper.toDto(deleted);
+    }
+
     public List<BookDto> getAllBooks() {
         List<Book> all = bookRepository.findAll();
 

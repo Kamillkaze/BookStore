@@ -11,6 +11,8 @@ import java.util.Optional;
 public interface BookRepository extends MongoRepository<Book, String> {
     Optional<Book> findByUrlId(String urlId);
 
+    Optional<Book> deleteByUrlId(String urlId);
+
     List<Book> findByTagsContainingIgnoreCase(String tag);
 
     List<Book> findByTitleContainingIgnoreCase(String phrase);
