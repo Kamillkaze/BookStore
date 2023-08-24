@@ -1,6 +1,6 @@
 package com.bookstore.advice;
 
-import jakarta.servlet.http.HttpServletRequest;
+import com.bookstore.exception.TagCountBelowZeroException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +24,8 @@ public class ApiExceptionHandler {
     }
 
     @ExceptionHandler(NoSuchElementException.class)
-    public ResponseEntity<Object> handleNoSuchElementException(HttpServletRequest request) {
-        String message = "The document with specified property does not exist: " + request.getQueryString();
+    public ResponseEntity<Object> handleNoSuchElementException() {
+        String message = "The document with specified property does not exist";
 
         return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
     }
@@ -33,6 +33,13 @@ public class ApiExceptionHandler {
     @ExceptionHandler(DuplicateKeyException.class)
     public ResponseEntity<Object> handleDuplicateKeyException() {
         String message = "The document with specified id already exists";
+
+        return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(TagCountBelowZeroException.class)
+    public ResponseEntity<Object> handleTagCountBelowZeroException() {
+        String message = "Tag count have to be greater or equal to zero";
 
         return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
     }

@@ -15,16 +15,22 @@ public class BookService {
 
     private final BookRepository bookRepository;
     private final BookMapper bookMapper;
+    private final TagService tagService;
 
-    public BookService(BookRepository bookRepository, BookMapper bookMapper) {
+    public BookService(BookRepository bookRepository, BookMapper bookMapper, TagService tagService) {
         this.bookRepository = bookRepository;
         this.bookMapper = bookMapper;
+        this.tagService = tagService;
     }
 
     public BookDto addBook(BookDto bookDto) throws DuplicateKeyException {
         Book book = bookMapper.toDocument(bookDto);
 
-        return bookMapper.toDto(bookRepository.insert(book));
+        Book inserted = bookRepository.insert(book);
+        inserted.getTags()
+            .forEach(tagService::incrementTagCount);
+
+        return bookMapper.toDto(inserted);
     }
 
     public List<BookDto> getAllBooks() {
