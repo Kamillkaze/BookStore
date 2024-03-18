@@ -35,6 +35,7 @@ public class BookDto {
     private boolean favorite;
     @NotNull(message = "Image should not be null")
     private String imageUrl;
+    @NotNull(message = "Tags can be an empty list but never null")
     private List<String> tags;
 
 

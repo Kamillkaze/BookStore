@@ -27,7 +27,7 @@ public class BookService {
         Book book = bookMapper.toDocument(bookDto);
 
         Book inserted = bookRepository.insert(book);
-        incrementTagCountsIfExists(inserted.getTags());
+        incrementTagCounts(inserted.getTags());
 
         return bookMapper.toDto(inserted);
     }
@@ -35,7 +35,7 @@ public class BookService {
     public BookDto deleteABook(String urlId) {
         Book deleted = bookRepository.deleteByUrlId(urlId)
                 .orElseThrow(NoSuchElementException::new);
-        decrementTagCountsIfExists(deleted.getTags());
+        decrementTagCounts(deleted.getTags());
 
         return bookMapper.toDto(deleted);
     }
@@ -72,15 +72,11 @@ public class BookService {
                 .toList();
     }
 
-    private void incrementTagCountsIfExists(List<String> tags) {
-        if (!tags.isEmpty()) {
-            tags.forEach(tagService::incrementTagCount);
-        }
+    private void incrementTagCounts(List<String> tags) {
+        tags.forEach(tagService::incrementTagCount);
     }
 
-    private void decrementTagCountsIfExists(List<String> tags) {
-        if (!tags.isEmpty()) {
-            tags.forEach(tagService::decrementTagCount);
-        }
+    private void decrementTagCounts(List<String> tags) {
+        tags.forEach(tagService::decrementTagCount);
     }
 }
