@@ -14,7 +14,7 @@ public class BookBuilder {
     private BigDecimal price;
     private boolean favorite;
     private String imageUrl;
-    private List<String> tags;
+    private List<Tag> tags;
 
     public BookBuilder title(String title) {
         this.title = title;
@@ -50,7 +50,7 @@ public class BookBuilder {
         return this;
     }
 
-    public BookBuilder tags(List<String> tags) {
+    public BookBuilder tags(List<Tag> tags) {
         this.tags = tags;
         return this;
     }

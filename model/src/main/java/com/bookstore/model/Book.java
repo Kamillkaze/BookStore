@@ -1,17 +1,62 @@
 package com.bookstore.model;
 
-import com.mongodb.lang.NonNull;
+import jakarta.persistence.*;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.lang.NonNull;
 
 import java.math.BigDecimal;
 import java.util.List;
 
-@Document
+@Entity
+@Table(name = "book")
 public class Book {
 
-    Book(@NonNull String urlId, @NonNull String title, @NonNull String author, Integer stars, BigDecimal price, boolean favorite, String imageUrl, List<String> tags) {
+
+    @jakarta.persistence.Id
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
+
+    @Column(unique = true, name = "url_id")
+    @NonNull
+    private String urlId;
+
+    @NonNull
+    @Column(name = "title")
+    private String title;
+
+    @NonNull
+    @Column(name = "author")
+    private String author;
+
+    @Column(name = "stars")
+    private Integer stars;
+
+    @Column(name = "price")
+    private BigDecimal price;
+
+    @Column(name = "favorite")
+    private boolean favorite;
+
+    @Column(name = "image_url")
+    private String imageUrl;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "book_tag",
+        joinColumns = @JoinColumn(name = "book_id"),
+        inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    private List<Tag> tags;
+
+    public Book(@NonNull String urlId, @NonNull String title, @NonNull String author) {
+        this.urlId = urlId;
+        this.title = title;
+        this.author = author;
+    }
+
+    Book(@NonNull String urlId, @NonNull String title, @NonNull String author, Integer stars, BigDecimal price, boolean favorite, String imageUrl, List<Tag> tags) {
         this.urlId = urlId;
         this.title = title;
         this.author = author;
@@ -21,23 +66,14 @@ public class Book {
         this.imageUrl = imageUrl;
         this.tags = tags;
     }
+    public Book() {
+    }
 
-    @Id
-    private String id;
-    @Indexed(unique = true)
-    @NonNull
-    private final String urlId;
-    @NonNull
-    private final String title;
-    @NonNull
-    private final String author;
-    private Integer stars;
-    private BigDecimal price;
-    private boolean favorite;
-    private String imageUrl;
-    private List<String> tags;
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
@@ -72,7 +108,7 @@ public class Book {
         return imageUrl;
     }
 
-    public List<String> getTags() {
+    public List<Tag> getTags() {
         return tags;
     }
 }

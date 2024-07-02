@@ -1,5 +1,6 @@
 package com.bookstore.dto;
 
+import com.bookstore.model.Tag;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -12,7 +13,7 @@ public class BookDto {
     public BookDto() {
     }
 
-    BookDto(String urlId, String title, String author, Integer stars, BigDecimal price, boolean favorite, String imageUrl, List<String> tags) {
+    BookDto(String urlId, String title, String author, Integer stars, BigDecimal price, boolean favorite, String imageUrl, List<Tag> tags) {
         this.urlId = urlId;
         this.title = title;
         this.author = author;
@@ -36,7 +37,7 @@ public class BookDto {
     @NotNull(message = "Image should not be null")
     private String imageUrl;
     @NotNull(message = "Tags can be an empty list but never null")
-    private List<String> tags;
+    private List<Tag> tags;
 
 
     public String getUrlId() {
@@ -67,7 +68,7 @@ public class BookDto {
         return imageUrl;
     }
 
-    public List<String> getTags() {
+    public List<Tag> getTags() {
         return tags;
     }
 }

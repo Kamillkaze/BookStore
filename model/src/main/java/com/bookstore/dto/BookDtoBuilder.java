@@ -1,5 +1,7 @@
 package com.bookstore.dto;
 
+import com.bookstore.model.Tag;
+
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -12,7 +14,7 @@ public class BookDtoBuilder {
     private BigDecimal price;
     private boolean favorite;
     private String imageUrl;
-    private List<String> tags;
+    private List<Tag> tags;
 
     public BookDtoBuilder urlId(String urlId) {
         this.urlId = urlId;
@@ -48,7 +50,7 @@ public class BookDtoBuilder {
         return this;
     }
 
-    public BookDtoBuilder tags(List<String> tags) {
+    public BookDtoBuilder tags(List<Tag> tags) {
         this.tags = tags;
         return this;
     }

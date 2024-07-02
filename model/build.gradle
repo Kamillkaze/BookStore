@@ -4,7 +4,8 @@ plugins {
 }
 
 dependencies {
-    api libs.spring.boot.data.mongodb
+    api libs.spring.boot.data.jpa
+    api libs.mysql.connector
     implementation libs.spring.boot.validation
     implementation libs.apache.commons
     testImplementation libs.spring.boot.test

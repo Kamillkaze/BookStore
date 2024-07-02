@@ -3,9 +3,9 @@ package com.bookstore.service;
 import com.bookstore.dto.TagDto;
 import com.bookstore.exception.TagCountBelowZeroException;
 import com.bookstore.mapper.TagMapper;
+import com.bookstore.model.Book;
 import com.bookstore.model.Tag;
 import com.bookstore.repository.TagRepository;
-import com.mongodb.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,10 +21,10 @@ public class TagService {
         this.tagMapper = tagMapper;
     }
 
-    public TagDto addNewTag(String name) throws DuplicateKeyException {
+    public TagDto addNewTag(String name) {
         Tag tag = new Tag(name);
 
-        return tagMapper.toDto(tagRepository.insert(tag));
+        return tagMapper.toDto(tagRepository.save(tag));
     }
 
     public TagDto deleteATag(String tagName) {
@@ -40,19 +40,24 @@ public class TagService {
                 .toList();
     }
 
-    public void incrementTagCount(String name) {
+    public void addBookToTag(String name, Book toBeAdded) {
         Tag tag = tagRepository.findByName(name)
                 .orElseThrow(NoSuchElementException::new)
-                .incrementCountByOne();
+                .addBook(toBeAdded);
 
         tagRepository.save(tag);
     }
 
-    public void decrementTagCount(String name) throws TagCountBelowZeroException {
+    public void removeBookFromTag(String name, Book toBeRemoved) throws TagCountBelowZeroException {
         Tag tag = tagRepository.findByName(name)
                 .orElseThrow(NoSuchElementException::new)
-                .decrementCountByOne();
+                .removeBook(toBeRemoved);
 
         tagRepository.save(tag);
+    }
+
+    public Tag findTagByName(String name) {
+        return tagRepository.findByName(name)
+                .orElseThrow(NoSuchElementException::new);
     }
 }

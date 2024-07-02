@@ -3,8 +3,8 @@ package com.bookstore.service;
 import com.bookstore.dto.BookDto;
 import com.bookstore.mapper.BookMapper;
 import com.bookstore.model.Book;
+import com.bookstore.model.Tag;
 import com.bookstore.repository.BookRepository;
-import com.mongodb.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,11 +23,12 @@ public class BookService {
         this.tagService = tagService;
     }
 
-    public BookDto addBook(BookDto bookDto) throws DuplicateKeyException {
+    public BookDto addBook(BookDto bookDto) {
         Book book = bookMapper.toDocument(bookDto);
 
-        Book inserted = bookRepository.insert(book);
-        incrementTagCounts(inserted.getTags());
+        Book inserted = bookRepository.save(book);
+        inserted.getTags()
+            .forEach(tag -> tagService.addBookToTag(tag.getName(), inserted));
 
         return bookMapper.toDto(inserted);
     }
@@ -35,7 +36,8 @@ public class BookService {
     public BookDto deleteABook(String urlId) {
         Book deleted = bookRepository.deleteByUrlId(urlId)
                 .orElseThrow(NoSuchElementException::new);
-        decrementTagCounts(deleted.getTags());
+        deleted.getTags()
+                .forEach(tag -> tagService.removeBookFromTag(tag.getName(), deleted));
 
         return bookMapper.toDto(deleted);
     }
@@ -53,7 +55,8 @@ public class BookService {
         return bookMapper.toDto(byUrlId);
     }
 
-    public List<BookDto> getAllBooksByTag(String tag) {
+    public List<BookDto> getAllBooksByTag(String tagName) {
+        Tag tag = tagService.findTagByName(tagName);
         List<Book> foundByTag = bookRepository.findByTagsContainingIgnoreCase(tag);
 
         return convertToBookDtoList(foundByTag);
@@ -70,13 +73,5 @@ public class BookService {
                 .stream()
                 .map(bookMapper::toDto)
                 .toList();
-    }
-
-    private void incrementTagCounts(List<String> tags) {
-        tags.forEach(tagService::incrementTagCount);
-    }
-
-    private void decrementTagCounts(List<String> tags) {
-        tags.forEach(tagService::decrementTagCount);
     }
 }
