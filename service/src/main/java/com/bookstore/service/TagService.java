@@ -6,6 +6,7 @@ import com.bookstore.mapper.TagMapper;
 import com.bookstore.model.Book;
 import com.bookstore.model.Tag;
 import com.bookstore.repository.TagRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,6 +28,11 @@ public class TagService {
         return tagMapper.toDto(tagRepository.save(tag));
     }
 
+    @Transactional
+    public TagDto updateTag(Tag updated) {
+        return tagMapper.toDto(tagRepository.save(updated));
+    }
+
     public TagDto deleteATag(String tagName) {
         Tag deleted = tagRepository.deleteByName(tagName)
                 .orElseThrow(NoSuchElementException::new);
@@ -39,15 +45,7 @@ public class TagService {
                 .map(tagMapper::toDto)
                 .toList();
     }
-
-    public void addBookToTag(String name, Book toBeAdded) {
-        Tag tag = tagRepository.findByName(name)
-                .orElseThrow(NoSuchElementException::new)
-                .addBook(toBeAdded);
-
-        tagRepository.save(tag);
-    }
-
+    
     public void removeBookFromTag(String name, Book toBeRemoved) throws TagCountBelowZeroException {
         Tag tag = tagRepository.findByName(name)
                 .orElseThrow(NoSuchElementException::new)

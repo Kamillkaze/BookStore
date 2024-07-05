@@ -19,7 +19,10 @@ public class Tag {
     @Column(unique = true, name = "name")
     private String name;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(
+            fetch = FetchType.LAZY,
+            cascade = { CascadeType.MERGE, CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH }
+    )
     @JoinTable(
             name = "book_tag",
             joinColumns = @JoinColumn(name = "tag_id"),

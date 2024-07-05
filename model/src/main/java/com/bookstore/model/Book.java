@@ -1,7 +1,6 @@
 package com.bookstore.model;
 
 import jakarta.persistence.*;
-import org.springframework.data.annotation.Id;
 import org.springframework.lang.NonNull;
 
 import java.math.BigDecimal;
@@ -12,7 +11,6 @@ import java.util.List;
 public class Book {
 
 
-    @jakarta.persistence.Id
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -42,7 +40,10 @@ public class Book {
     @Column(name = "image_url")
     private String imageUrl;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(
+            fetch = FetchType.LAZY,
+            cascade = { CascadeType.MERGE, CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH }
+    )
     @JoinTable(
         name = "book_tag",
         joinColumns = @JoinColumn(name = "book_id"),
@@ -55,8 +56,8 @@ public class Book {
         this.title = title;
         this.author = author;
     }
-
-    Book(@NonNull String urlId, @NonNull String title, @NonNull String author, Integer stars, BigDecimal price, boolean favorite, String imageUrl, List<Tag> tags) {
+    Book(Long id, @NonNull String urlId, @NonNull String title, @NonNull String author, Integer stars, BigDecimal price, boolean favorite, String imageUrl, List<Tag> tags) {
+        this.id = id;
         this.urlId = urlId;
         this.title = title;
         this.author = author;
@@ -66,6 +67,7 @@ public class Book {
         this.imageUrl = imageUrl;
         this.tags = tags;
     }
+
     public Book() {
     }
 

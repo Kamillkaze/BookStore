@@ -1,6 +1,5 @@
 package com.bookstore.dto;
 
-import com.bookstore.model.Tag;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -10,20 +9,7 @@ import java.util.List;
 
 public class BookDto {
 
-    public BookDto() {
-    }
-
-    BookDto(String urlId, String title, String author, Integer stars, BigDecimal price, boolean favorite, String imageUrl, List<Tag> tags) {
-        this.urlId = urlId;
-        this.title = title;
-        this.author = author;
-        this.stars = stars;
-        this.price = price;
-        this.favorite = favorite;
-        this.imageUrl = imageUrl;
-        this.tags = tags;
-    }
-
+    private Long id;
     private String urlId;
     @NotBlank(message = "Title should not be blank")
     private String title;
@@ -37,8 +23,26 @@ public class BookDto {
     @NotNull(message = "Image should not be null")
     private String imageUrl;
     @NotNull(message = "Tags can be an empty list but never null")
-    private List<Tag> tags;
+    private List<String> tags;
 
+    public BookDto() {
+    }
+
+    BookDto(Long id, String urlId, String title, String author, Integer stars, BigDecimal price, boolean favorite, String imageUrl, List<String> tags) {
+        this.id = id;
+        this.urlId = urlId;
+        this.title = title;
+        this.author = author;
+        this.stars = stars;
+        this.price = price;
+        this.favorite = favorite;
+        this.imageUrl = imageUrl;
+        this.tags = tags;
+    }
+
+    public Long getId() {
+        return id;
+    }
 
     public String getUrlId() {
         return urlId;
@@ -68,7 +72,7 @@ public class BookDto {
         return imageUrl;
     }
 
-    public List<Tag> getTags() {
+    public List<String> getTags() {
         return tags;
     }
 }

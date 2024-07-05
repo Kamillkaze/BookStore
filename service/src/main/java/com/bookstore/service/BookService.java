@@ -5,6 +5,7 @@ import com.bookstore.mapper.BookMapper;
 import com.bookstore.model.Book;
 import com.bookstore.model.Tag;
 import com.bookstore.repository.BookRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,12 +24,10 @@ public class BookService {
         this.tagService = tagService;
     }
 
+    @Transactional
     public BookDto addBook(BookDto bookDto) {
-        Book book = bookMapper.toDocument(bookDto);
-
+        Book book = bookMapper.toEntity(bookDto);
         Book inserted = bookRepository.save(book);
-        inserted.getTags()
-            .forEach(tag -> tagService.addBookToTag(tag.getName(), inserted));
 
         return bookMapper.toDto(inserted);
     }
@@ -36,8 +35,6 @@ public class BookService {
     public BookDto deleteABook(String urlId) {
         Book deleted = bookRepository.deleteByUrlId(urlId)
                 .orElseThrow(NoSuchElementException::new);
-        deleted.getTags()
-                .forEach(tag -> tagService.removeBookFromTag(tag.getName(), deleted));
 
         return bookMapper.toDto(deleted);
     }

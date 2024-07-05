@@ -7,6 +7,7 @@ import java.util.List;
 
 public class BookDtoBuilder {
 
+    private Long id;
     private String urlId;
     private String title;
     private String author;
@@ -14,7 +15,12 @@ public class BookDtoBuilder {
     private BigDecimal price;
     private boolean favorite;
     private String imageUrl;
-    private List<Tag> tags;
+    private List<String> tags;
+
+    public BookDtoBuilder id(Long id) {
+        this.id = id;
+        return this;
+    }
 
     public BookDtoBuilder urlId(String urlId) {
         this.urlId = urlId;
@@ -51,10 +57,24 @@ public class BookDtoBuilder {
     }
 
     public BookDtoBuilder tags(List<Tag> tags) {
-        this.tags = tags;
+        this.tags = tags
+                .stream()
+                .map(Tag::getName)
+                .toList();
+
         return this;
     }
     public BookDto build() {
-        return new BookDto(urlId, title, author, stars, price, favorite, imageUrl, tags);
+        return new BookDto(
+                    this.id,
+                    this.urlId,
+                    this.title,
+                    this.author,
+                    this.stars,
+                    this.price,
+                    this.favorite,
+                    this.imageUrl,
+                    this.tags
+        );
     }
 }
