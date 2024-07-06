@@ -27,4 +27,13 @@ public class CommonsService {
         tag.addBook(toBeAdded);
         return tagService.updateTag(tag);
     }
+
+    public TagDto removeBookFromTag(String tagName, String bookUrlId) {
+        Book toBeRemoved = bookService.getBookEntityById(bookUrlId);
+
+        Tag tag = tagService.findTagByName(tagName);
+        tag.removeBook(toBeRemoved);
+
+        return tagService.updateTag(tag);
+    }
 }

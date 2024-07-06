@@ -2,7 +2,6 @@ package com.bookstore.service;
 
 import com.bookstore.dto.TagDto;
 import com.bookstore.mapper.TagMapper;
-import com.bookstore.model.Book;
 import com.bookstore.model.Tag;
 import com.bookstore.repository.TagRepository;
 import jakarta.transaction.Transactional;
@@ -43,14 +42,6 @@ public class TagService {
                 .stream()
                 .map(tagMapper::toDto)
                 .toList();
-    }
-    
-    public void removeBookFromTag(String name, Book toBeRemoved) throws TagCountBelowZeroException {
-        Tag tag = tagRepository.findByName(name)
-                .orElseThrow(NoSuchElementException::new)
-                .removeBook(toBeRemoved);
-
-        tagRepository.save(tag);
     }
 
     public Tag findTagByName(String name) {
