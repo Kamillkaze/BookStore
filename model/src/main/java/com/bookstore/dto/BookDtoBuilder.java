@@ -57,10 +57,12 @@ public class BookDtoBuilder {
     }
 
     public BookDtoBuilder tags(List<Tag> tags) {
-        this.tags = tags
-                .stream()
-                .map(Tag::getName)
-                .toList();
+        if (tags != null && tags.size() > 0){
+            this.tags = tags
+                    .stream()
+                    .map(Tag::getName)
+                    .toList();
+        }
 
         return this;
     }
