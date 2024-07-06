@@ -38,17 +38,15 @@ public class Tag {
         this.books = new ArrayList<>();
     }
 
-    public Tag addBook(Book book) {
+    public void addBook(Book book) {
         if (this.books == null) {
             this.books = new ArrayList<>();
         }
         this.books.add(book);
-        return this;
     }
 
-    public Tag removeBook(Book book) {
+    public void removeBook(Book book) {
         this.books.remove(book);
-        return this;
     }
 
     public Long getId() {

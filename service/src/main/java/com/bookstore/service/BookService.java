@@ -45,11 +45,13 @@ public class BookService {
         return convertToBookDtoList(all);
     }
 
-    public BookDto getBookById(String urlId) {
-        Book byUrlId = bookRepository.findByUrlId(urlId)
+    public Book getBookEntityById(String urlId) {
+        return bookRepository.findByUrlId(urlId)
                             .orElseThrow(NoSuchElementException::new);
+    }
 
-        return bookMapper.toDto(byUrlId);
+    public BookDto getBookById(String urlId) {
+        return bookMapper.toDto(getBookEntityById(urlId));
     }
 
     public List<BookDto> getAllBooksByTag(String tagName) {

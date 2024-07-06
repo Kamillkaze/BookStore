@@ -20,11 +20,10 @@ public class CommonsService {
         this.tagService = tagService;
     }
 
-    public TagDto addBookToTag(String name, String bookUrlId) {
-        BookDto bookDto = bookService.getBookById(bookUrlId);
-        Book toBeAdded = bookMapper.toEntity(bookDto);
+    public TagDto addBookToTag(String tagName, String bookUrlId) {
+        Book toBeAdded = bookService.getBookEntityById(bookUrlId);
 
-        Tag tag = tagService.findTagByName(name);
+        Tag tag = tagService.findTagByName(tagName);
         tag.addBook(toBeAdded);
         return tagService.updateTag(tag);
     }

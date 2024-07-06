@@ -1,7 +1,6 @@
 package com.bookstore.service;
 
 import com.bookstore.dto.TagDto;
-import com.bookstore.exception.TagCountBelowZeroException;
 import com.bookstore.mapper.TagMapper;
 import com.bookstore.model.Book;
 import com.bookstore.model.Tag;
