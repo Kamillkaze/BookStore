@@ -31,10 +31,13 @@ public class TagService {
         return tagMapper.toDto(tagRepository.save(updated));
     }
 
-    public TagDto deleteATag(String tagName) {
-        Tag deleted = tagRepository.deleteByName(tagName)
-                .orElseThrow(NoSuchElementException::new);
-        return tagMapper.toDto(deleted);
+    @Transactional
+    public void deleteATag(String tagName) {
+        int rowsAffected = tagRepository.deleteByName(tagName);
+
+        if (rowsAffected == 0) {
+           throw new NoSuchElementException();
+        }
     }
 
     public List<TagDto> getAll() {

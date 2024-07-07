@@ -16,12 +16,12 @@ public class CommonsController {
         this.commonsService = commonsService;
     }
 
-    @PostMapping(value = "/tags/{tagName}")
+    @PostMapping(value = "/tag/{tagName}")
     public ResponseEntity<TagDto> addBookToTag(@PathVariable String tagName, @RequestParam String bookUrlId) {
         return ResponseEntity.ok(commonsService.addBookToTag(tagName, bookUrlId));
     }
 
-    @DeleteMapping(value = "/tags/{tagName}")
+    @DeleteMapping(value = "/tag/{tagName}")
     public ResponseEntity<TagDto> removeBookFromTag(@PathVariable String tagName, @RequestParam String bookUrlId) {
         return ResponseEntity.ok(commonsService.removeBookFromTag(tagName, bookUrlId));
     }

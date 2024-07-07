@@ -32,11 +32,13 @@ public class BookService {
         return bookMapper.toDto(inserted);
     }
 
-    public BookDto deleteABook(String urlId) {
-        Book deleted = bookRepository.deleteByUrlId(urlId)
-                .orElseThrow(NoSuchElementException::new);
+    @Transactional
+    public void deleteABook(String urlId) {
+        int rowsAffected = bookRepository.deleteByUrlId(urlId);
 
-        return bookMapper.toDto(deleted);
+        if (rowsAffected == 0) {
+            throw new NoSuchElementException();
+        }
     }
 
     public List<BookDto> getAllBooks() {
@@ -62,7 +64,7 @@ public class BookService {
     }
 
     public List<BookDto> getAllBooksByPhrase(String phrase) {
-        List<Book> foundByPhrase = bookRepository.findByTitleContainingIgnoreCase(phrase);
+        List<Book> foundByPhrase = bookRepository.findByUrlIdContainingIgnoreCase(phrase);
 
         return convertToBookDtoList(foundByPhrase);
     }

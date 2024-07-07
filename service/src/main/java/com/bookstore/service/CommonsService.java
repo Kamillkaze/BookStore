@@ -1,8 +1,6 @@
 package com.bookstore.service;
 
-import com.bookstore.dto.BookDto;
 import com.bookstore.dto.TagDto;
-import com.bookstore.mapper.BookMapper;
 import com.bookstore.model.Book;
 import com.bookstore.model.Tag;
 import org.springframework.stereotype.Service;
@@ -11,12 +9,10 @@ import org.springframework.stereotype.Service;
 public class CommonsService {
 
     private final BookService bookService;
-    private final BookMapper bookMapper;
     private final TagService tagService;
 
-    public CommonsService(BookService bookService, BookMapper bookMapper, TagService tagService) {
+    public CommonsService(BookService bookService, TagService tagService) {
         this.bookService = bookService;
-        this.bookMapper = bookMapper;
         this.tagService = tagService;
     }
 
