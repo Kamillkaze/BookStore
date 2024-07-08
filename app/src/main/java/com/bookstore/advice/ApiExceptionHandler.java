@@ -24,7 +24,7 @@ public class ApiExceptionHandler {
 
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<Object> handleNoSuchElementException() {
-        String message = "The document with specified property does not exist";
+        String message = "An object with specified property does not exist";
 
         return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
     }

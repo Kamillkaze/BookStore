@@ -3,7 +3,6 @@ package com.bookstore.service;
 import com.bookstore.dto.BookDto;
 import com.bookstore.mapper.BookMapper;
 import com.bookstore.model.Book;
-import com.bookstore.model.Tag;
 import com.bookstore.repository.BookRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -16,12 +15,10 @@ public class BookService {
 
     private final BookRepository bookRepository;
     private final BookMapper bookMapper;
-    private final TagService tagService;
 
-    public BookService(BookRepository bookRepository, BookMapper bookMapper, TagService tagService) {
+    public BookService(BookRepository bookRepository, BookMapper bookMapper) {
         this.bookRepository = bookRepository;
         this.bookMapper = bookMapper;
-        this.tagService = tagService;
     }
 
     @Transactional
@@ -57,8 +54,7 @@ public class BookService {
     }
 
     public List<BookDto> getAllBooksByTag(String tagName) {
-        Tag tag = tagService.findTagByName(tagName);
-        List<Book> foundByTag = bookRepository.findByTagsContainingIgnoreCase(tag);
+        List<Book> foundByTag = bookRepository.findByTagName(tagName);
 
         return convertToBookDtoList(foundByTag);
     }
