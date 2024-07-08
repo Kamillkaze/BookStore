@@ -64,7 +64,7 @@ public class BookService {
     }
 
     public List<BookDto> getAllBooksByPhrase(String phrase) {
-        List<Book> foundByPhrase = bookRepository.findByUrlIdContainingIgnoreCase(phrase);
+        List<Book> foundByPhrase = bookRepository.findByUrlIdContainingPhrase(phrase);
 
         return convertToBookDtoList(foundByPhrase);
     }
