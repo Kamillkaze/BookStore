@@ -12,6 +12,10 @@ import java.util.Optional;
 
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long> {
+
+    @Query("SELECT b FROM Book b LEFT JOIN FETCH b.tags")
+    List<Book> findAllBooks();
+
     Optional<Book> findByUrlId(String urlId);
 
     @Modifying

@@ -39,7 +39,7 @@ public class BookService {
     }
 
     public List<BookDto> getAllBooks() {
-        List<Book> all = bookRepository.findAll();
+        List<Book> all = bookRepository.findAllBooks();
 
         return convertToBookDtoList(all);
     }
