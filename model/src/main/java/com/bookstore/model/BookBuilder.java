@@ -7,6 +7,7 @@ import java.util.List;
 
 public class BookBuilder {
 
+    private Long id;
     private String urlId;
     private String title;
     private String author;
@@ -14,7 +15,12 @@ public class BookBuilder {
     private BigDecimal price;
     private boolean favorite;
     private String imageUrl;
-    private List<String> tags;
+    private List<Tag> tags;
+
+    public BookBuilder id(Long id) {
+        this.id = id;
+        return this;
+    }
 
     public BookBuilder title(String title) {
         this.title = title;
@@ -50,12 +56,22 @@ public class BookBuilder {
         return this;
     }
 
-    public BookBuilder tags(List<String> tags) {
+    public BookBuilder tags(List<Tag> tags) {
         this.tags = tags;
         return this;
     }
 
     public Book build() {
-        return new Book(this.urlId, this.title, this.author, this.stars, this.price, this.favorite, this.imageUrl, this.tags);
+        return new Book(
+                this.id,
+                this.urlId,
+                this.title,
+                this.author,
+                this.stars,
+                this.price,
+                this.favorite,
+                this.imageUrl,
+                this.tags
+        );
     }
 }

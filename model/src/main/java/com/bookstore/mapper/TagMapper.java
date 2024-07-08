@@ -7,6 +7,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class TagMapper {
     public TagDto toDto(Tag tag) {
-        return new TagDto(tag.getName(), tag.getCount());
+        return new TagDto(tag.getName(), tag.getBooks().size());
     }
 }

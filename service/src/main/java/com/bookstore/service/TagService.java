@@ -1,11 +1,10 @@
 package com.bookstore.service;
 
 import com.bookstore.dto.TagDto;
-import com.bookstore.exception.TagCountBelowZeroException;
 import com.bookstore.mapper.TagMapper;
 import com.bookstore.model.Tag;
 import com.bookstore.repository.TagRepository;
-import com.mongodb.DuplicateKeyException;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,16 +20,24 @@ public class TagService {
         this.tagMapper = tagMapper;
     }
 
-    public TagDto addNewTag(String name) throws DuplicateKeyException {
+    public TagDto addNewTag(String name) {
         Tag tag = new Tag(name);
 
-        return tagMapper.toDto(tagRepository.insert(tag));
+        return tagMapper.toDto(tagRepository.save(tag));
     }
 
-    public TagDto deleteATag(String tagName) {
-        Tag deleted = tagRepository.deleteByName(tagName)
-                .orElseThrow(NoSuchElementException::new);
-        return tagMapper.toDto(deleted);
+    @Transactional
+    public TagDto updateTag(Tag updated) {
+        return tagMapper.toDto(tagRepository.save(updated));
+    }
+
+    @Transactional
+    public void deleteATag(String tagName) {
+        int rowsAffected = tagRepository.deleteByName(tagName);
+
+        if (rowsAffected == 0) {
+           throw new NoSuchElementException();
+        }
     }
 
     public List<TagDto> getAll() {
@@ -40,19 +47,8 @@ public class TagService {
                 .toList();
     }
 
-    public void incrementTagCount(String name) {
-        Tag tag = tagRepository.findByName(name)
-                .orElseThrow(NoSuchElementException::new)
-                .incrementCountByOne();
-
-        tagRepository.save(tag);
-    }
-
-    public void decrementTagCount(String name) throws TagCountBelowZeroException {
-        Tag tag = tagRepository.findByName(name)
-                .orElseThrow(NoSuchElementException::new)
-                .decrementCountByOne();
-
-        tagRepository.save(tag);
+    public Tag findTagByName(String name) {
+        return tagRepository.findByName(name)
+                .orElseThrow(NoSuchElementException::new);
     }
 }

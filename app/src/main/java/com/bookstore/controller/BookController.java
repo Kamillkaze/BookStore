@@ -37,8 +37,8 @@ public class BookController {
     }
 
     @GetMapping("/tag/{tag}")
-    public ResponseEntity<List<BookDto>> getAllBooksByTag(@PathVariable(value = "tag") String tag) {
-        List<BookDto> allBooksByTag = bookService.getAllBooksByTag(tag);
+    public ResponseEntity<List<BookDto>> getAllBooksByTag(@PathVariable(value = "tag") String tagName) {
+        List<BookDto> allBooksByTag = bookService.getAllBooksByTag(tagName);
 
         return ResponseEntity.ok(allBooksByTag);
     }
@@ -58,9 +58,9 @@ public class BookController {
     }
 
     @DeleteMapping("/{urlId}")
-    public ResponseEntity<BookDto> deleteBook(@PathVariable String urlId) {
-        BookDto returned = bookService.deleteABook(urlId);
+    public ResponseEntity<String> deleteBook(@PathVariable String urlId) {
+        bookService.deleteABook(urlId);
 
-        return ResponseEntity.ok(returned);
+        return ResponseEntity.ok("Record with id: \"" + urlId + "\" successfully removed");
     }
 }

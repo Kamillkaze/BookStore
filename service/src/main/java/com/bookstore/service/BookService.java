@@ -3,8 +3,9 @@ package com.bookstore.service;
 import com.bookstore.dto.BookDto;
 import com.bookstore.mapper.BookMapper;
 import com.bookstore.model.Book;
+import com.bookstore.model.Tag;
 import com.bookstore.repository.BookRepository;
-import com.mongodb.DuplicateKeyException;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,21 +24,21 @@ public class BookService {
         this.tagService = tagService;
     }
 
-    public BookDto addBook(BookDto bookDto) throws DuplicateKeyException {
-        Book book = bookMapper.toDocument(bookDto);
-
-        Book inserted = bookRepository.insert(book);
-        incrementTagCounts(inserted.getTags());
+    @Transactional
+    public BookDto addBook(BookDto bookDto) {
+        Book book = bookMapper.toEntity(bookDto);
+        Book inserted = bookRepository.save(book);
 
         return bookMapper.toDto(inserted);
     }
 
-    public BookDto deleteABook(String urlId) {
-        Book deleted = bookRepository.deleteByUrlId(urlId)
-                .orElseThrow(NoSuchElementException::new);
-        decrementTagCounts(deleted.getTags());
+    @Transactional
+    public void deleteABook(String urlId) {
+        int rowsAffected = bookRepository.deleteByUrlId(urlId);
 
-        return bookMapper.toDto(deleted);
+        if (rowsAffected == 0) {
+            throw new NoSuchElementException();
+        }
     }
 
     public List<BookDto> getAllBooks() {
@@ -46,21 +47,24 @@ public class BookService {
         return convertToBookDtoList(all);
     }
 
-    public BookDto getBookById(String urlId) {
-        Book byUrlId = bookRepository.findByUrlId(urlId)
+    public Book getBookEntityById(String urlId) {
+        return bookRepository.findByUrlId(urlId)
                             .orElseThrow(NoSuchElementException::new);
-
-        return bookMapper.toDto(byUrlId);
     }
 
-    public List<BookDto> getAllBooksByTag(String tag) {
+    public BookDto getBookById(String urlId) {
+        return bookMapper.toDto(getBookEntityById(urlId));
+    }
+
+    public List<BookDto> getAllBooksByTag(String tagName) {
+        Tag tag = tagService.findTagByName(tagName);
         List<Book> foundByTag = bookRepository.findByTagsContainingIgnoreCase(tag);
 
         return convertToBookDtoList(foundByTag);
     }
 
     public List<BookDto> getAllBooksByPhrase(String phrase) {
-        List<Book> foundByPhrase = bookRepository.findByTitleContainingIgnoreCase(phrase);
+        List<Book> foundByPhrase = bookRepository.findByUrlIdContainingPhrase(phrase);
 
         return convertToBookDtoList(foundByPhrase);
     }
@@ -70,13 +74,5 @@ public class BookService {
                 .stream()
                 .map(bookMapper::toDto)
                 .toList();
-    }
-
-    private void incrementTagCounts(List<String> tags) {
-        tags.forEach(tagService::incrementTagCount);
-    }
-
-    private void decrementTagCounts(List<String> tags) {
-        tags.forEach(tagService::decrementTagCount);
     }
 }

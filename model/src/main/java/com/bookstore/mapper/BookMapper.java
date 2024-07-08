@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 public class BookMapper {
     public BookDto toDto(Book book) {
         return new BookDtoBuilder()
+                .id(book.getId())
                 .urlId(book.getUrlId())
                 .title(book.getTitle())
                 .author(book.getAuthor())
@@ -21,8 +22,9 @@ public class BookMapper {
                 .build();
     }
 
-    public Book toDocument(BookDto dto) {
+    public Book toEntity(BookDto dto) {
         return new BookBuilder()
+                .id(dto.getId())
                 .urlId(dto.getAuthor(), dto.getTitle())
                 .title(dto.getTitle())
                 .author(dto.getAuthor())
@@ -30,7 +32,6 @@ public class BookMapper {
                 .price(dto.getPrice())
                 .favorite(dto.isFavorite())
                 .imageUrl(dto.getImageUrl())
-                .tags(dto.getTags())
                 .build();
     }
 }

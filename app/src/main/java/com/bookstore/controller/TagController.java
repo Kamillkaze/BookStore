@@ -20,13 +20,13 @@ public class TagController {
 
     @PostMapping("/{tagName}")
     public ResponseEntity<TagDto> addNewTag(@PathVariable String tagName) {
-
         return ResponseEntity.ok(tagService.addNewTag(tagName));
     }
 
     @DeleteMapping(value = "/{tagName}")
-    public ResponseEntity<TagDto> deleteATag(@PathVariable String tagName) {
-        return ResponseEntity.ok(tagService.deleteATag(tagName));
+    public ResponseEntity<String> deleteATag(@PathVariable String tagName) {
+        tagService.deleteATag(tagName);
+        return ResponseEntity.ok("Tag \"" + tagName + "\" successfully removed.");
     }
 
     @GetMapping

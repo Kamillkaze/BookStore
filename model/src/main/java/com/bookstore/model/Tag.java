@@ -1,41 +1,60 @@
 package com.bookstore.model;
 
-import com.bookstore.exception.TagCountBelowZeroException;
-import com.mongodb.lang.NonNull;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
+import jakarta.persistence.*;
+import org.springframework.lang.NonNull;
 
-@Document
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@Table(name = "tag")
 public class Tag {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
+
+    @NonNull
+    @Column(unique = true, name = "name")
+    private String name;
+
+    @ManyToMany(
+            fetch = FetchType.LAZY,
+            cascade = { CascadeType.MERGE, CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH }
+    )
+    @JoinTable(
+            name = "book_tag",
+            joinColumns = @JoinColumn(name = "tag_id"),
+            inverseJoinColumns = @JoinColumn(name = "book_id")
+    )
+    private List<Book> books;
+
+    public Tag() {
+    }
 
     public Tag(@NonNull String name) {
         this.name = name;
-        this.count = 0;
+        this.books = new ArrayList<>();
     }
 
-    @Id
-    private String id;
-
-    @NonNull
-    @Indexed(unique = true)
-    private final String name;
-
-    @NonNull
-    private Integer count;
-
-    public Tag incrementCountByOne() {
-        this.count++;
-        return this;
-    }
-
-    public Tag decrementCountByOne() {
-        if (this.count <= 0) {
-            throw new TagCountBelowZeroException();
+    public void addBook(Book book) {
+        if (this.books == null) {
+            this.books = new ArrayList<>();
         }
-        this.count--;
+        this.books.add(book);
+    }
 
-        return this;
+    public void removeBook(Book book) {
+        this.books.remove(book);
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     @NonNull
@@ -43,8 +62,11 @@ public class Tag {
         return name;
     }
 
-    @NonNull
-    public Integer getCount() {
-        return count;
+    public List<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(List<Book> books) {
+        this.books = books;
     }
 }
