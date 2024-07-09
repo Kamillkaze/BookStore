@@ -31,6 +31,6 @@ public class TagController {
 
     @GetMapping
     public ResponseEntity<List<TagDto>> getAll() {
-        return ResponseEntity.ok(tagService.getAll());
+        return ResponseEntity.ok(tagService.getAllTags());
     }
 }
