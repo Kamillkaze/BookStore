@@ -26,7 +26,6 @@ public class TagService {
         return tagMapper.toDto(tagRepository.save(tag));
     }
 
-    @Transactional
     public TagDto updateTag(Tag updated) {
         return tagMapper.toDto(tagRepository.save(updated));
     }
