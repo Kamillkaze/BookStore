@@ -26,7 +26,6 @@ public class TagService {
         return tagMapper.toDto(tagRepository.save(tag));
     }
 
-    @Transactional
     public TagDto updateTag(Tag updated) {
         return tagMapper.toDto(tagRepository.save(updated));
     }
@@ -40,11 +39,8 @@ public class TagService {
         }
     }
 
-    public List<TagDto> getAll() {
-        return tagRepository.findAll()
-                .stream()
-                .map(tagMapper::toDto)
-                .toList();
+    public List<TagDto> getAllTags() {
+        return tagRepository.getAllTags();
     }
 
     public Tag findTagByName(String name) {

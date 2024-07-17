@@ -36,8 +36,8 @@ public class BookController {
         return ResponseEntity.ok(book);
     }
 
-    @GetMapping("/tag/{tag}")
-    public ResponseEntity<List<BookDto>> getAllBooksByTag(@PathVariable(value = "tag") String tagName) {
+    @GetMapping("/tag/{tagName}")
+    public ResponseEntity<List<BookDto>> getAllBooksByTag(@PathVariable(value = "tagName") String tagName) {
         List<BookDto> allBooksByTag = bookService.getAllBooksByTag(tagName);
 
         return ResponseEntity.ok(allBooksByTag);

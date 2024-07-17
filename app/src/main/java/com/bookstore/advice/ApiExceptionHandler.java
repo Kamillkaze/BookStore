@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import java.sql.SQLIntegrityConstraintViolationException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,7 +25,7 @@ public class ApiExceptionHandler {
 
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<Object> handleNoSuchElementException() {
-        String message = "The document with specified property does not exist";
+        String message = "An object with specified property does not exist";
 
         return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
     }
@@ -34,5 +35,10 @@ public class ApiExceptionHandler {
         String message = "The document with specified id already exists";
 
         return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
+    public ResponseEntity<Object> handleSQLIntegrityConstraintViolationException(Exception e) {
+        return new ResponseEntity<>(e.getCause().getMessage(), HttpStatus.BAD_REQUEST);
     }
 }
