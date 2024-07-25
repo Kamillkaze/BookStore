@@ -2,7 +2,6 @@ package com.bookstore.repository;
 
 import com.bookstore.TestConfig;
 import com.bookstore.dto.TagDto;
-import com.bookstore.mapper.TagMapper;
 import com.bookstore.model.Book;
 import com.bookstore.model.BookBuilder;
 import com.bookstore.model.Tag;
@@ -32,11 +31,7 @@ class TagRepositoryTest {
     @Autowired
     private BookRepository bookRepository;
 
-    private List<Book> savedBooks;
-
     private List<Tag> savedTags;
-    @Autowired
-    private TagMapper tagMapper;
 
     @BeforeEach
     void setUp() {
@@ -61,7 +56,7 @@ class TagRepositoryTest {
         book4.getTags().add(tag1);
         book4.getTags().add(tag3);
         book5.getTags().add(tag2);
-        savedBooks = bookRepository.saveAll(booksToSave);
+        bookRepository.saveAll(booksToSave);
     }
 
     @Test
