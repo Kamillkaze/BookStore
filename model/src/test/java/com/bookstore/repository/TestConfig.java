@@ -1,4 +1,4 @@
-package com.bookstore;
+package com.bookstore.repository;
 
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;

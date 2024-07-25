@@ -1,6 +1,5 @@
 package com.bookstore.repository;
 
-import com.bookstore.TestConfig;
 import com.bookstore.model.Book;
 import com.bookstore.model.BookBuilder;
 import com.bookstore.model.Tag;

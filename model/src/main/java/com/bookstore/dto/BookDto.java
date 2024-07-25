@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 
 public class BookDto {
 
@@ -73,5 +74,18 @@ public class BookDto {
 
     public List<String> getTags() {
         return tags;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BookDto bookDto = (BookDto) o;
+        return favorite == bookDto.favorite && Objects.equals(id, bookDto.id) && Objects.equals(urlId, bookDto.urlId) && Objects.equals(title, bookDto.title) && Objects.equals(author, bookDto.author) && Objects.equals(stars, bookDto.stars) && Objects.equals(price, bookDto.price) && Objects.equals(imageUrl, bookDto.imageUrl) && Objects.equals(tags, bookDto.tags);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, urlId, title, author, stars, price, favorite, imageUrl, tags);
     }
 }
