@@ -4,12 +4,12 @@ import com.bookstore.dto.TagDto;
 import com.bookstore.model.Book;
 import com.bookstore.model.BookBuilder;
 import com.bookstore.model.Tag;
-import org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ContextConfiguration;
 
 import java.math.BigDecimal;
@@ -62,7 +62,7 @@ class TagRepositoryTest {
     @DisplayName("Should throw when attempting to add a tag with non unique name")
     void throwWhenTagNameIsNotUnique() {
         assertThatThrownBy(() -> tagRepository.save(new Tag("tag1")))
-                .hasRootCauseInstanceOf(JdbcSQLIntegrityConstraintViolationException.class);
+                .isInstanceOf(DataIntegrityViolationException.class);
     }
 
     @Test
