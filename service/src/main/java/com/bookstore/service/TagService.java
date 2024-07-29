@@ -26,10 +26,6 @@ public class TagService {
         return tagMapper.toDto(tagRepository.save(tag));
     }
 
-    public TagDto updateTag(Tag updated) {
-        return tagMapper.toDto(tagRepository.save(updated));
-    }
-
     @Transactional
     public void deleteATag(String tagName) {
         int rowsAffected = tagRepository.deleteByName(tagName);
