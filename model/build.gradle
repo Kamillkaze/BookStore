@@ -5,8 +5,9 @@ plugins {
 
 dependencies {
     api libs.spring.boot.data.jpa
-    api libs.mysql.connector
+    implementation libs.mysql.connector
     implementation libs.spring.boot.validation
     implementation libs.apache.commons
     testImplementation libs.spring.boot.test
+    testImplementation libs.h2.db
 }

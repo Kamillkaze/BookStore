@@ -5,6 +5,7 @@ import org.springframework.lang.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "tag")
@@ -68,5 +69,18 @@ public class Tag {
 
     public void setBooks(List<Book> books) {
         this.books = books;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Tag tag = (Tag) o;
+        return Objects.equals(id, tag.id) && Objects.equals(name, tag.name) && Objects.equals(books, tag.books);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, books);
     }
 }

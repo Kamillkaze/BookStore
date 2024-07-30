@@ -57,7 +57,7 @@ public class BookDtoBuilder {
     }
 
     public BookDtoBuilder tags(List<Tag> tags) {
-        if (tags != null && tags.size() > 0){
+        if (tags != null && !tags.isEmpty()){
             this.tags = tags
                     .stream()
                     .map(Tag::getName)

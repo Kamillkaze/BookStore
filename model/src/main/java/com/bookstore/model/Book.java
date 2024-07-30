@@ -5,6 +5,7 @@ import org.springframework.lang.NonNull;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "book")
@@ -112,5 +113,18 @@ public class Book {
 
     public List<Tag> getTags() {
         return tags;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Book book = (Book) o;
+        return favorite == book.favorite && Objects.equals(id, book.id) && Objects.equals(urlId, book.urlId) && Objects.equals(title, book.title) && Objects.equals(author, book.author) && Objects.equals(stars, book.stars) && Objects.equals(price, book.price) && Objects.equals(imageUrl, book.imageUrl) && Objects.equals(tags, book.tags);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, urlId, title, author, stars, price, favorite, imageUrl, tags);
     }
 }
