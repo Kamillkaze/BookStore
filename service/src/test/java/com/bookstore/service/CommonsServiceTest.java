@@ -39,7 +39,7 @@ class CommonsServiceTest {
     private CommonsRepository commonsRepository;
 
     @Test
-    @DisplayName("Should throw NoSuchElementException if Tag not addBookToTag()")
+    @DisplayName("Should throw NoSuchElementException if Tag not found addBookToTag()")
     void addBookToTagWhenTagNotFound() {
         String tagName = "tagName";
         String urlId = "url-id";
@@ -105,7 +105,7 @@ class CommonsServiceTest {
     }
 
     @Test
-    @DisplayName("Should add book to tag correctly removeBookFromTag()")
+    @DisplayName("Should remove a book from tag correctly removeBookFromTag()")
     void removeBookFromTagWhenEverythingOk() {
         String tagName = "tagName";
         String urlId = "author-title";
