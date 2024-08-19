@@ -1,7 +1,6 @@
 package com.bookstore.controller;
 
 import com.bookstore.dto.BookDto;
-import com.bookstore.dto.BookDtoBuilder;
 import com.bookstore.model.Tag;
 import com.bookstore.service.BookService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,16 +16,28 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.math.BigDecimal;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import static com.bookstore.controller.TestUtils.getDefaultBookDtos;
+import static com.bookstore.controller.TestUtils.getResponses;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.*;
 
 @WebMvcTest(controllers = BookController.class)
 class BookControllerTest {
+
+    public static final int BOOK_DTO_1_INDEX = 0;
+    public static final int BOOK_DTO_2_INDEX = 1;
+    public static final int BODY_DTO_BLANK_PROPERTIES_INDEX = 2;
+    public static final int BOOK_DTO_NO_URLID_INDEX = 3;
+    public static final int ALL_BOOKS_RESPONSE_INDEX = 0;
+    public static final int BOOK_BY_ID_RESPONSE_INDEX = 1;
+    public static final int BOOKS_BY_TAG_RESPONSE_INDEX = 2;
+    public static final int BOOKS_BY_PHRASE_RESPONSE_INDEX = 3;
+    public static final int BLANK_PROPERTIES_RESPONSE_INDEX = 4;
+    public static final int ADD_BOOK_RESPONSE_INDEX = 5;
 
     @MockBean
     private BookService bookService;
@@ -40,10 +51,10 @@ class BookControllerTest {
     @Test
     @DisplayName("Should get all books correctly getAllBooks()")
     void shouldGetAllBooksCorrectly() throws Exception {
-        BookDto bookDto1 = new BookDtoBuilder().id(1L).urlId("author-1-title-1").title("Title 1").author("Author 1").stars(2).price(new BigDecimal("2.99")).favorite(false).imageUrl("image/1").tags(List.of(new Tag("tag1"))).build();
-        BookDto bookDto2 = new BookDtoBuilder().id(2L).urlId("author-2-title-2").title("Title 2").author("Author 2").stars(5).price(new BigDecimal("3.99")).favorite(true).imageUrl("image/2").tags(List.of()).build();
+        BookDto bookDto1 = getDefaultBookDtos().get(BOOK_DTO_1_INDEX).tags(List.of(new Tag("tag1"))).build();
+        BookDto bookDto2 = getDefaultBookDtos().get(BOOK_DTO_2_INDEX).build();
         when(bookService.getAllBooks()).thenReturn(List.of(bookDto1, bookDto2));
-        String expected = "[{\"id\":1,\"urlId\":\"author-1-title-1\",\"title\":\"Title 1\",\"author\":\"Author 1\",\"stars\":2,\"price\":2.99,\"favorite\":false,\"imageUrl\":\"image/1\",\"tags\":[\"tag1\"]},{\"id\":2,\"urlId\":\"author-2-title-2\",\"title\":\"Title 2\",\"author\":\"Author 2\",\"stars\":5,\"price\":3.99,\"favorite\":true,\"imageUrl\":\"image/2\",\"tags\":null}]" ;
+        String expected = getResponses().get(ALL_BOOKS_RESPONSE_INDEX);
 
         RequestBuilder request = MockMvcRequestBuilders.get("/books");
         MvcResult result = mockMvc.perform(request).andReturn();
@@ -81,10 +92,10 @@ class BookControllerTest {
     @Test
     @DisplayName("Should return a book by id correctly getBookById()")
     void getBookByIdCorrectly() throws Exception {
-        String urlId = "author-1-title-1";
-        BookDto bookDto = new BookDtoBuilder().id(1L).urlId(urlId).title("Title 1").author("Author 1").stars(2).price(new BigDecimal("2.99")).favorite(false).imageUrl("image/1").tags(List.of(new Tag("tag1"))).build();
+        BookDto bookDto = getDefaultBookDtos().get(BOOK_DTO_1_INDEX).tags(List.of(new Tag("tag1"))).build();
+        String urlId = bookDto.getUrlId();
         when(bookService.getBookById(urlId)).thenReturn(bookDto);
-        String expected = "{\"id\":1,\"urlId\":\"author-1-title-1\",\"title\":\"Title 1\",\"author\":\"Author 1\",\"stars\":2,\"price\":2.99,\"favorite\":false,\"imageUrl\":\"image/1\",\"tags\":[\"tag1\"]}";
+        String expected = getResponses().get(BOOK_BY_ID_RESPONSE_INDEX);
 
         RequestBuilder request = MockMvcRequestBuilders.get("/books/" + urlId);
         MvcResult result = mockMvc.perform(request).andReturn();
@@ -112,10 +123,10 @@ class BookControllerTest {
     void getBooksByTagCorrect() throws Exception {
         String tagName = "tag1";
         Tag tag1 = new Tag(tagName);
-        BookDto bookDto1 = new BookDtoBuilder().id(1L).urlId("author-1-title-1").title("Title 1").author("Author 1").stars(2).price(new BigDecimal("2.99")).favorite(false).imageUrl("image/1").tags(List.of(tag1)).build();
-        BookDto bookDto2 = new BookDtoBuilder().id(2L).urlId("author-2-title-2").title("Title 2").author("Author 2").stars(5).price(new BigDecimal("3.99")).favorite(true).imageUrl("image/2").tags(List.of(tag1)).build();
+        BookDto bookDto1 = getDefaultBookDtos().get(BOOK_DTO_1_INDEX).tags(List.of(tag1)).build();
+        BookDto bookDto2 = getDefaultBookDtos().get(BOOK_DTO_2_INDEX).tags(List.of(tag1)).build();
         when(bookService.getAllBooksByTag(tagName)).thenReturn(List.of(bookDto1, bookDto2));
-        String expected = "[{\"id\":1,\"urlId\":\"author-1-title-1\",\"title\":\"Title 1\",\"author\":\"Author 1\",\"stars\":2,\"price\":2.99,\"favorite\":false,\"imageUrl\":\"image/1\",\"tags\":[\"tag1\"]},{\"id\":2,\"urlId\":\"author-2-title-2\",\"title\":\"Title 2\",\"author\":\"Author 2\",\"stars\":5,\"price\":3.99,\"favorite\":true,\"imageUrl\":\"image/2\",\"tags\":[\"tag1\"]}]";
+        String expected = getResponses().get(BOOKS_BY_TAG_RESPONSE_INDEX);
 
         RequestBuilder request = MockMvcRequestBuilders.get("/books/tag/" + tagName);
         MvcResult result = mockMvc.perform(request).andReturn();
@@ -142,10 +153,10 @@ class BookControllerTest {
     @DisplayName("Should return a list of books with a specified phrase in urlId correctly getAllBooksByPhrase()")
     void getBooksByPhraseCorrect() throws Exception {
         String phrase = "author";
-        BookDto bookDto1 = new BookDtoBuilder().id(1L).urlId("author-1-title-1").title("Title 1").author("Author 1").stars(2).price(new BigDecimal("2.99")).favorite(false).imageUrl("image/1").tags(List.of()).build();
-        BookDto bookDto2 = new BookDtoBuilder().id(2L).urlId("author-2-title-2").title("Title 2").author("Author 2").stars(5).price(new BigDecimal("3.99")).favorite(true).imageUrl("image/2").tags(List.of()).build();
+        BookDto bookDto1 = getDefaultBookDtos().get(BOOK_DTO_1_INDEX).build();
+        BookDto bookDto2 = getDefaultBookDtos().get(BOOK_DTO_2_INDEX).build();
         when(bookService.getAllBooksByPhrase(phrase)).thenReturn(List.of(bookDto1, bookDto2));
-        String expected = "[{\"id\":1,\"urlId\":\"author-1-title-1\",\"title\":\"Title 1\",\"author\":\"Author 1\",\"stars\":2,\"price\":2.99,\"favorite\":false,\"imageUrl\":\"image/1\",\"tags\":null},{\"id\":2,\"urlId\":\"author-2-title-2\",\"title\":\"Title 2\",\"author\":\"Author 2\",\"stars\":5,\"price\":3.99,\"favorite\":true,\"imageUrl\":\"image/2\",\"tags\":null}]";
+        String expected = getResponses().get(BOOKS_BY_PHRASE_RESPONSE_INDEX);
 
         RequestBuilder request = MockMvcRequestBuilders.get("/books/phrase/" + phrase);
         MvcResult result = mockMvc.perform(request).andReturn();
@@ -157,9 +168,9 @@ class BookControllerTest {
     @Test
     @DisplayName("Should return error when body not valid addBook()")
     void addBookWhenBodyStateNotValid() throws Exception {
-        BookDto bookDto = new BookDtoBuilder().title("").author("").stars(2).price(new BigDecimal("2.99")).favorite(false).imageUrl("image/1").tags(List.of()).build();
+        BookDto bookDto = getDefaultBookDtos().get(BODY_DTO_BLANK_PROPERTIES_INDEX).build();
         String input = objectMapper.writeValueAsString(bookDto);
-        String expected = "{\"author\":\"Author should not be blank\",\"title\":\"Title should not be blank\"}";
+        String expected = getResponses().get(BLANK_PROPERTIES_RESPONSE_INDEX);
 
         RequestBuilder request = MockMvcRequestBuilders
                 .post("/books")
@@ -190,7 +201,7 @@ class BookControllerTest {
     @Test
     @DisplayName("Should return error when trying to add an entity with already existing author and title (results in duplicated urlId) addBook()")
     void addBookWhenDuplicatedId() throws Exception {
-        BookDto bookDto = new BookDtoBuilder().title("title").author("author").stars(2).price(new BigDecimal("2.99")).favorite(false).imageUrl("image/1").tags(List.of()).build();
+        BookDto bookDto = getDefaultBookDtos().get(BOOK_DTO_1_INDEX).build();
         String input = objectMapper.writeValueAsString(bookDto);
         String errorMessage = "could not execute statement [Duplicate entry";
         Mockito.doAnswer(invocation -> {
@@ -210,10 +221,10 @@ class BookControllerTest {
     @Test
     @DisplayName("Should add a book correctly addBook()")
     void addBookCorrect() throws Exception {
-        BookDto bookDto = new BookDtoBuilder().title("title").author("author").stars(2).price(new BigDecimal("2.99")).favorite(false).imageUrl("image/1").tags(List.of()).build();
-        BookDto created = new BookDtoBuilder().id(1L).urlId("author-title").title("title").author("author").stars(2).price(new BigDecimal("2.99")).favorite(false).imageUrl("image/1").tags(List.of()).build();
+        BookDto bookDto = getDefaultBookDtos().get(BOOK_DTO_NO_URLID_INDEX).build();
+        BookDto created = getDefaultBookDtos().get(BOOK_DTO_1_INDEX).build();
         String input = objectMapper.writeValueAsString(bookDto);
-        String expected = "{\"id\":1,\"urlId\":\"author-title\",\"title\":\"title\",\"author\":\"author\",\"stars\":2,\"price\":2.99,\"favorite\":false,\"imageUrl\":\"image/1\",\"tags\":null}";
+        String expected = getResponses().get(ADD_BOOK_RESPONSE_INDEX);
         when(bookService.addBook(bookDto)).thenReturn(created);
 
         RequestBuilder request = MockMvcRequestBuilders
