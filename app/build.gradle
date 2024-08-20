@@ -7,5 +7,6 @@ dependencies {
     implementation project(':service')
     implementation libs.spring.boot.web
     implementation libs.spring.boot.validation
+    implementation libs.spring.boot.security
     testImplementation libs.spring.boot.test
 }
