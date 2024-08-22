@@ -24,8 +24,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(customizer ->
                 customizer
-                        .requestMatchers(HttpMethod.GET, "/api/v1/**").hasRole("USER")
-                        .requestMatchers(HttpMethod.GET, "/api/v1/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/v1/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/**").hasRole("ADMIN")
         );
