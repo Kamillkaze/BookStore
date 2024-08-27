@@ -43,7 +43,7 @@ class TagControllerTest {
         }).when(tagService).addNewTag(tagName);
 
         RequestBuilder request = MockMvcRequestBuilders
-                .post("/tags/" + tagName);
+                .post("/api/v1/tags/" + tagName);
         MvcResult result = mockMvc.perform(request).andReturn();
 
         assertThat(result.getResponse().getStatus()).isEqualTo(400);
@@ -59,7 +59,7 @@ class TagControllerTest {
         when(tagService.addNewTag(tagName)).thenReturn(tagDto);
 
         RequestBuilder request = MockMvcRequestBuilders
-                .post("/tags/" + tagName);
+                .post("/api/v1/tags/" + tagName);
         MvcResult result = mockMvc.perform(request).andReturn();
 
         assertThat(result.getResponse().getStatus()).isEqualTo(200);
@@ -76,7 +76,7 @@ class TagControllerTest {
         }).when(tagService).deleteATag(tagName);
 
         RequestBuilder request = MockMvcRequestBuilders
-                .delete("/tags/" + tagName);
+                .delete("/api/v1/tags/" + tagName);
         MvcResult result = mockMvc.perform(request).andReturn();
 
         assertThat(result.getResponse().getStatus()).isEqualTo(404);
@@ -90,7 +90,7 @@ class TagControllerTest {
         String expected = "Tag \"" + tagName + "\" successfully removed.";
 
         RequestBuilder request = MockMvcRequestBuilders
-                .delete("/tags/" + tagName);
+                .delete("/api/v1/tags/" + tagName);
         MvcResult result = mockMvc.perform(request).andReturn();
 
         assertThat(result.getResponse().getStatus()).isEqualTo(200);
@@ -105,7 +105,7 @@ class TagControllerTest {
         when(tagService.getAllTags()).thenReturn(tagDtos);
 
         RequestBuilder request = MockMvcRequestBuilders
-                .get("/tags");
+                .get("/api/v1/tags");
         MvcResult result = mockMvc.perform(request).andReturn();
 
         assertThat(result.getResponse().getStatus()).isEqualTo(200);
