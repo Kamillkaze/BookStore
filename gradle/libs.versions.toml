@@ -3,6 +3,7 @@ spring-boot = "3.3.1"
 apache-commons = "3.0"
 mysql = "8.4.0"
 h2 = "2.3.230"
+spring-security-test = "6.3.3"
 
 [libraries]
 apache-commons = { module = "org.apache.commons:commons-lang3", version.ref = "apache-commons"}
@@ -13,6 +14,7 @@ mysql-connector = { module = "com.mysql:mysql-connector-j", version.ref = "mysql
 h2-db = { module = "com.h2database:h2", version.ref = "h2" }
 spring-boot-validation = { module = "org.springframework.boot:spring-boot-starter-validation", version.ref = "spring-boot" }
 spring-boot-security = { module = "org.springframework.boot:spring-boot-starter-security", version.ref = "spring-boot"}
+spring-security-test = { module = "org.springframework.security:spring-security-test", version.ref = "spring-security-test" }
 
 [plugins]
 spring-boot-plugin = { id = "org.springframework.boot", version.ref = "spring-boot" }
