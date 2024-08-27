@@ -56,7 +56,7 @@ class BookControllerTest {
         when(bookService.getAllBooks()).thenReturn(List.of(bookDto1, bookDto2));
         String expected = getResponses().get(ALL_BOOKS_RESPONSE_INDEX);
 
-        RequestBuilder request = MockMvcRequestBuilders.get("/books");
+        RequestBuilder request = MockMvcRequestBuilders.get("/api/v1/books");
         MvcResult result = mockMvc.perform(request).andReturn();
 
         assertThat(result.getResponse().getStatus()).isEqualTo(200);
@@ -69,7 +69,7 @@ class BookControllerTest {
         when(bookService.getAllBooks()).thenReturn(List.of());
         String expected = "[]";
 
-        RequestBuilder request = MockMvcRequestBuilders.get("/books");
+        RequestBuilder request = MockMvcRequestBuilders.get("/api/v1/books");
         MvcResult result = mockMvc.perform(request).andReturn();
 
         assertThat(result.getResponse().getStatus()).isEqualTo(200);
@@ -82,7 +82,7 @@ class BookControllerTest {
         String urlId = "author-title";
         when(bookService.getBookById(urlId)).thenThrow(new NoSuchElementException());
 
-        RequestBuilder request = MockMvcRequestBuilders.get("/books/" + urlId);
+        RequestBuilder request = MockMvcRequestBuilders.get("/api/v1/books/" + urlId);
         MvcResult result = mockMvc.perform(request).andReturn();
 
         assertThat(result.getResponse().getStatus()).isEqualTo(404);
@@ -97,7 +97,7 @@ class BookControllerTest {
         when(bookService.getBookById(urlId)).thenReturn(bookDto);
         String expected = getResponses().get(BOOK_BY_ID_RESPONSE_INDEX);
 
-        RequestBuilder request = MockMvcRequestBuilders.get("/books/" + urlId);
+        RequestBuilder request = MockMvcRequestBuilders.get("/api/v1/books/" + urlId);
         MvcResult result = mockMvc.perform(request).andReturn();
 
         assertThat(result.getResponse().getStatus()).isEqualTo(200);
@@ -111,7 +111,7 @@ class BookControllerTest {
         when(bookService.getAllBooksByTag(tagName)).thenReturn(List.of());
         String expected = "[]";
 
-        RequestBuilder request = MockMvcRequestBuilders.get("/books/tag/" + tagName);
+        RequestBuilder request = MockMvcRequestBuilders.get("/api/v1/books/tag/" + tagName);
         MvcResult result = mockMvc.perform(request).andReturn();
 
         assertThat(result.getResponse().getStatus()).isEqualTo(200);
@@ -128,7 +128,7 @@ class BookControllerTest {
         when(bookService.getAllBooksByTag(tagName)).thenReturn(List.of(bookDto1, bookDto2));
         String expected = getResponses().get(BOOKS_BY_TAG_RESPONSE_INDEX);
 
-        RequestBuilder request = MockMvcRequestBuilders.get("/books/tag/" + tagName);
+        RequestBuilder request = MockMvcRequestBuilders.get("/api/v1/books/tag/" + tagName);
         MvcResult result = mockMvc.perform(request).andReturn();
 
         assertThat(result.getResponse().getStatus()).isEqualTo(200);
@@ -142,7 +142,7 @@ class BookControllerTest {
         when(bookService.getAllBooksByPhrase(phrase)).thenReturn(List.of());
         String expected = "[]";
 
-        RequestBuilder request = MockMvcRequestBuilders.get("/books/phrase/" + phrase);
+        RequestBuilder request = MockMvcRequestBuilders.get("/api/v1/books/phrase/" + phrase);
         MvcResult result = mockMvc.perform(request).andReturn();
 
         assertThat(result.getResponse().getStatus()).isEqualTo(200);
@@ -158,7 +158,7 @@ class BookControllerTest {
         when(bookService.getAllBooksByPhrase(phrase)).thenReturn(List.of(bookDto1, bookDto2));
         String expected = getResponses().get(BOOKS_BY_PHRASE_RESPONSE_INDEX);
 
-        RequestBuilder request = MockMvcRequestBuilders.get("/books/phrase/" + phrase);
+        RequestBuilder request = MockMvcRequestBuilders.get("/api/v1/books/phrase/" + phrase);
         MvcResult result = mockMvc.perform(request).andReturn();
 
         assertThat(result.getResponse().getStatus()).isEqualTo(200);
@@ -173,7 +173,7 @@ class BookControllerTest {
         String expected = getResponses().get(BLANK_PROPERTIES_RESPONSE_INDEX);
 
         RequestBuilder request = MockMvcRequestBuilders
-                .post("/books")
+                .post("/api/v1/books")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(input);
         MvcResult result = mockMvc.perform(request).andReturn();
@@ -189,7 +189,7 @@ class BookControllerTest {
         String expected = "Invalid request body";
 
         RequestBuilder request = MockMvcRequestBuilders
-                .post("/books")
+                .post("/api/v1/books")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(input);
         MvcResult result = mockMvc.perform(request).andReturn();
@@ -209,7 +209,7 @@ class BookControllerTest {
         }).when(bookService).addBook(bookDto);
 
         RequestBuilder request = MockMvcRequestBuilders
-                .post("/books")
+                .post("/api/v1/books")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(input);
         MvcResult result = mockMvc.perform(request).andReturn();
@@ -228,7 +228,7 @@ class BookControllerTest {
         when(bookService.addBook(bookDto)).thenReturn(created);
 
         RequestBuilder request = MockMvcRequestBuilders
-                .post("/books")
+                .post("/api/v1/books")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(input);
         MvcResult result = mockMvc.perform(request).andReturn();
@@ -246,7 +246,7 @@ class BookControllerTest {
         }).when(bookService).deleteABook(urlId);
 
         RequestBuilder request = MockMvcRequestBuilders
-                .delete("/books/" + urlId);
+                .delete("/api/v1/books/" + urlId);
         MvcResult result = mockMvc.perform(request).andReturn();
 
         assertThat(result.getResponse().getStatus()).isEqualTo(404);
@@ -259,7 +259,7 @@ class BookControllerTest {
         String urlId = "url-id";
 
         RequestBuilder request = MockMvcRequestBuilders
-                .delete("/books/" + urlId);
+                .delete("/api/v1/books/" + urlId);
         MvcResult result = mockMvc.perform(request).andReturn();
 
         assertThat(result.getResponse().getStatus()).isEqualTo(200);
