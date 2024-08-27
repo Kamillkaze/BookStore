@@ -2,6 +2,7 @@ package com.bookstore.controller;
 
 import com.bookstore.dto.BookDto;
 import com.bookstore.model.Tag;
+import com.bookstore.security.SecurityConfig;
 import com.bookstore.service.BookService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -9,13 +10,19 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import javax.sql.DataSource;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -25,6 +32,7 @@ import static com.bookstore.controller.TestUtils.getResponses;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.*;
 
+@Import(SecurityConfig.class)
 @WebMvcTest(controllers = BookController.class)
 class BookControllerTest {
 
@@ -39,6 +47,15 @@ class BookControllerTest {
     public static final int BLANK_PROPERTIES_RESPONSE_INDEX = 4;
     public static final int ADD_BOOK_RESPONSE_INDEX = 5;
 
+    @TestConfiguration
+    static class MockDataSourceConfig {
+        @Bean
+        @Primary
+        public DataSource dataSource() {
+            return mock(DataSource.class);
+        }
+    }
+
     @MockBean
     private BookService bookService;
 
@@ -50,6 +67,7 @@ class BookControllerTest {
 
     @Test
     @DisplayName("Should get all books correctly getAllBooks()")
+    @WithMockUser
     void shouldGetAllBooksCorrectly() throws Exception {
         BookDto bookDto1 = getDefaultBookDtos().get(BOOK_DTO_1_INDEX).tags(List.of(new Tag("tag1"))).build();
         BookDto bookDto2 = getDefaultBookDtos().get(BOOK_DTO_2_INDEX).build();
@@ -65,6 +83,7 @@ class BookControllerTest {
 
     @Test
     @DisplayName("Should return empty list of books getAllBooks()")
+    @WithMockUser
     void getAllBooksIfThereAreNoReturned() throws Exception {
         when(bookService.getAllBooks()).thenReturn(List.of());
         String expected = "[]";
@@ -78,6 +97,7 @@ class BookControllerTest {
 
     @Test
     @DisplayName("Should handle NoSuchElementException getBookById()")
+    @WithMockUser
     void getBookByIdWhenIdNotExists() throws Exception {
         String urlId = "author-title";
         when(bookService.getBookById(urlId)).thenThrow(new NoSuchElementException());
@@ -91,6 +111,7 @@ class BookControllerTest {
 
     @Test
     @DisplayName("Should return a book by id correctly getBookById()")
+    @WithMockUser
     void getBookByIdCorrectly() throws Exception {
         BookDto bookDto = getDefaultBookDtos().get(BOOK_DTO_1_INDEX).tags(List.of(new Tag("tag1"))).build();
         String urlId = bookDto.getUrlId();
@@ -106,6 +127,7 @@ class BookControllerTest {
 
     @Test
     @DisplayName("Should return an empty list if books with a specified tag do not exist or the tag does not exist getAllBooksByTag()")
+    @WithMockUser
     void getBooksByTagWhenTagNotExist() throws Exception {
         String tagName = "tag1";
         when(bookService.getAllBooksByTag(tagName)).thenReturn(List.of());
@@ -120,6 +142,7 @@ class BookControllerTest {
 
     @Test
     @DisplayName("Should return a list of books with a specified tag correctly getAllBooksByTag()")
+    @WithMockUser
     void getBooksByTagCorrect() throws Exception {
         String tagName = "tag1";
         Tag tag1 = new Tag(tagName);
@@ -137,6 +160,7 @@ class BookControllerTest {
 
     @Test
     @DisplayName("Should return an empty list if books with a specified phrase in urlId do not exist getAllBooksByTag()")
+    @WithMockUser
     void getBooksByPhraseWhenPhraseNotExists() throws Exception {
         String phrase = "tag1";
         when(bookService.getAllBooksByPhrase(phrase)).thenReturn(List.of());
@@ -151,6 +175,7 @@ class BookControllerTest {
 
     @Test
     @DisplayName("Should return a list of books with a specified phrase in urlId correctly getAllBooksByPhrase()")
+    @WithMockUser
     void getBooksByPhraseCorrect() throws Exception {
         String phrase = "author";
         BookDto bookDto1 = getDefaultBookDtos().get(BOOK_DTO_1_INDEX).build();
@@ -167,6 +192,7 @@ class BookControllerTest {
 
     @Test
     @DisplayName("Should return error when body not valid addBook()")
+    @WithMockUser(roles = "ADMIN")
     void addBookWhenBodyStateNotValid() throws Exception {
         BookDto bookDto = getDefaultBookDtos().get(BODY_DTO_BLANK_PROPERTIES_INDEX).build();
         String input = objectMapper.writeValueAsString(bookDto);
@@ -184,6 +210,7 @@ class BookControllerTest {
 
     @Test
     @DisplayName("Should return error when body empty/null addBook()")
+    @WithMockUser(roles = "ADMIN")
     void addBookWhenBodyEmpty() throws Exception {
         String input = "";
         String expected = "Invalid request body";
@@ -200,6 +227,7 @@ class BookControllerTest {
 
     @Test
     @DisplayName("Should return error when trying to add an entity with already existing author and title (results in duplicated urlId) addBook()")
+    @WithMockUser(roles = "ADMIN")
     void addBookWhenDuplicatedId() throws Exception {
         BookDto bookDto = getDefaultBookDtos().get(BOOK_DTO_1_INDEX).build();
         String input = objectMapper.writeValueAsString(bookDto);
@@ -220,6 +248,7 @@ class BookControllerTest {
 
     @Test
     @DisplayName("Should add a book correctly addBook()")
+    @WithMockUser(roles = "ADMIN")
     void addBookCorrect() throws Exception {
         BookDto bookDto = getDefaultBookDtos().get(BOOK_DTO_NO_URLID_INDEX).build();
         BookDto created = getDefaultBookDtos().get(BOOK_DTO_1_INDEX).build();
@@ -239,6 +268,7 @@ class BookControllerTest {
 
     @Test
     @DisplayName("Should return NOT_FOUND if book does not exist by urlId deleteBook()")
+    @WithMockUser(roles = "ADMIN")
     void deleteBookWhenBookWithProvidedIdDoesNotExist() throws Exception {
         String urlId = "not-existing-url-id";
         doAnswer(invocation -> {
@@ -255,6 +285,7 @@ class BookControllerTest {
 
     @Test
     @DisplayName("Should delete a book by urlId correctly deleteBook()")
+    @WithMockUser(roles = "ADMIN")
     void deleteBookCorrect() throws Exception {
         String urlId = "url-id";
 
