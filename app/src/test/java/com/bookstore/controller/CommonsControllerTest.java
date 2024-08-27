@@ -38,7 +38,7 @@ class CommonsControllerTest {
         when(commonsService.addBookToTag(tagName, bookUrlId)).thenThrow(new NoSuchElementException());
 
         RequestBuilder request = MockMvcRequestBuilders
-                .post("/commons/tag/" + tagName)
+                .post("/api/v1/commons/tag/" + tagName)
                 .param("bookUrlId", bookUrlId);
         MvcResult result = mockMvc.perform(request).andReturn();
 
@@ -52,7 +52,7 @@ class CommonsControllerTest {
         String tagName = "tag1";
 
         RequestBuilder request = MockMvcRequestBuilders
-                .post("/commons/tag/" + tagName);
+                .post("/api/v1/commons/tag/" + tagName);
         MvcResult result = mockMvc.perform(request).andReturn();
 
         assertThat(result.getResponse().getStatus()).isEqualTo(400);
@@ -69,7 +69,7 @@ class CommonsControllerTest {
         when(commonsService.addBookToTag(tagName, bookUrlId)).thenReturn(tagDto);
 
         RequestBuilder request = MockMvcRequestBuilders
-                .post("/commons/tag/" + tagName)
+                .post("/api/v1/commons/tag/" + tagName)
                 .param("bookUrlId", bookUrlId);
         MvcResult result = mockMvc.perform(request).andReturn();
 
@@ -85,7 +85,7 @@ class CommonsControllerTest {
         when(commonsService.removeBookFromTag(tagName, bookUrlId)).thenThrow(new NoSuchElementException());
 
         RequestBuilder request = MockMvcRequestBuilders
-                .delete("/commons/tag/" + tagName)
+                .delete("/api/v1/commons/tag/" + tagName)
                 .param("bookUrlId", bookUrlId);
         MvcResult result = mockMvc.perform(request).andReturn();
 
@@ -99,7 +99,7 @@ class CommonsControllerTest {
         String tagName = "tag1";
 
         RequestBuilder request = MockMvcRequestBuilders
-                .delete("/commons/tag/" + tagName);
+                .delete("/api/v1/commons/tag/" + tagName);
         MvcResult result = mockMvc.perform(request).andReturn();
 
         assertThat(result.getResponse().getStatus()).isEqualTo(400);
@@ -117,7 +117,7 @@ class CommonsControllerTest {
         when(commonsService.removeBookFromTag(tagName, bookUrlId)).thenReturn(tagDto);
 
         RequestBuilder request = MockMvcRequestBuilders
-                .delete("/commons/tag/" + tagName)
+                .delete("/api/v1/commons/tag/" + tagName)
                 .param("bookUrlId", bookUrlId);
         MvcResult result = mockMvc.perform(request).andReturn();
 
