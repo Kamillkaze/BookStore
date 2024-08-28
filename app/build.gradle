@@ -9,4 +9,5 @@ dependencies {
     implementation libs.spring.boot.validation
     implementation libs.spring.boot.security
     testImplementation libs.spring.boot.test
+    testImplementation libs.spring.security.test
 }
