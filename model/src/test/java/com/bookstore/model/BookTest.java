@@ -7,7 +7,6 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class BookTest {
     @Test
@@ -125,8 +124,8 @@ class BookTest {
     @Test
     @DisplayName("Equals method should return true when comparing two objects with null fields that match")
     void testEqualsWithMatchingNullFields() {
-        Book book1 = new Book(null, null, null, null, null,null, false, null, null);
-        Book book2 = new Book(null, null, null, null, null,null, false, null, null);
+        Book book1 = new Book(null, "id", "title", "author", null,null, false, null, null);
+        Book book2 = new Book(null, "id", "title", "author", null,null, false, null, null);
 
         assertThat(book1).isEqualTo(book2);
     }
