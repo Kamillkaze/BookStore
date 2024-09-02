@@ -4,9 +4,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 class BookTest {
     @Test
@@ -140,5 +143,127 @@ class BookTest {
         book2.setId(2L);
 
         assertThat(book1).isNotEqualTo(book2);
+    }
+
+    @Test
+    @DisplayName("HashCode should be consistent for the same object")
+    void testHashCodeConsistency() {
+        Book book = new BookBuilder()
+                .id(1L)
+                .urlId("author", "title")
+                .title("title")
+                .author("author")
+                .stars(4)
+                .price(new BigDecimal("12.99"))
+                .imageUrl("image.png")
+                .tags(List.of(new Tag("name1"), new Tag("name2")))
+                .favorite(false)
+                .build();
+
+        int initialHashCode = book.hashCode();
+        assertThat(book.hashCode()).isEqualTo(initialHashCode);
+    }
+
+    @Test
+    @DisplayName("HashCode should be equal for two equal objects")
+    void testHashCodeEqualityForEqualObjects() {
+        Book book1 = new BookBuilder()
+                .id(1L)
+                .urlId("author", "title")
+                .title("title")
+                .author("author")
+                .stars(4)
+                .price(new BigDecimal("12.99"))
+                .imageUrl("image.png")
+                .tags(List.of(new Tag("name1"), new Tag("name2")))
+                .favorite(false)
+                .build();
+
+        Book book2 = new BookBuilder()
+                .id(1L)
+                .urlId("author", "title")
+                .title("title")
+                .author("author")
+                .stars(4)
+                .price(new BigDecimal("12.99"))
+                .imageUrl("image.png")
+                .tags(List.of(new Tag("name1"), new Tag("name2")))
+                .favorite(false)
+                .build();
+
+        assertThat(book1.hashCode()).isEqualTo(book2.hashCode());
+    }
+
+    @Test
+    @DisplayName("HashCode should differ for two different objects")
+    void testHashCodeDifferenceForDifferentObjects() {
+        Book book1 = new BookBuilder()
+                .id(1L)
+                .urlId("author", "title")
+                .title("title")
+                .author("author")
+                .stars(4)
+                .price(new BigDecimal("12.99"))
+                .imageUrl("image.png")
+                .tags(List.of(new Tag("name1"), new Tag("name2")))
+                .favorite(false)
+                .build();
+
+        Book book2 = new BookBuilder()
+                .id(1L)
+                .urlId("author2", "title2")
+                .title("title2")
+                .author("author2")
+                .stars(4)
+                .price(new BigDecimal("22.99"))
+                .imageUrl("image2.png")
+                .tags(List.of(new Tag("different name1"), new Tag("different name2")))
+                .favorite(true)
+                .build();
+
+        assertThat(book1.hashCode()).isNotEqualTo(book2.hashCode());
+    }
+
+    @Test
+    @DisplayName("HashCode should work correctly when fields are null")
+    void testHashCodeWithNullFields() {
+        Book book1 = new Book(null, "id", "title", "author", null,null, false, null, null);
+        Book book2 = new Book(null, "id", "title", "author", null,null, false, null, null);
+
+        assertThat(book1.hashCode()).isEqualTo(book2.hashCode());
+    }
+
+    @Test
+    @DisplayName("HashCode should work correctly in collections")
+    void testHashCodeInCollections() {
+        Book book1 = new BookBuilder()
+                .id(1L)
+                .urlId("author", "title")
+                .title("title")
+                .author("author")
+                .stars(4)
+                .price(new BigDecimal("12.99"))
+                .imageUrl("image.png")
+                .tags(List.of(new Tag("name1"), new Tag("name2")))
+                .favorite(false)
+                .build();
+
+        Book book2 = new BookBuilder()
+                .id(1L)
+                .urlId("author", "title")
+                .title("title")
+                .author("author")
+                .stars(4)
+                .price(new BigDecimal("12.99"))
+                .imageUrl("image.png")
+                .tags(List.of(new Tag("name1"), new Tag("name2")))
+                .favorite(false)
+                .build();
+
+        Set<Book> bookSet = new HashSet<>();
+        bookSet.add(book1);
+        bookSet.add(book2); // book2 should not be added since it's equal to book1
+
+        assertThat(bookSet).hasSize(1);
     }
 }
