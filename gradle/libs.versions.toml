@@ -18,3 +18,4 @@ spring-security-test = { module = "org.springframework.security:spring-security-
 
 [plugins]
 spring-boot-plugin = { id = "org.springframework.boot", version.ref = "spring-boot" }
+spotless = "com.diffplug.spotless:6.25.0"

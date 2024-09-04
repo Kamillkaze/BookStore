@@ -1,6 +1,15 @@
 plugins {
     alias libs.plugins.spring.boot.plugin
     id 'com.bookstore.common-conventions'
+    alias libs.plugins.spotless
+}
+
+spotless {
+    java {
+        googleJavaFormat("1.15.0")
+        indentWithTabs(2)
+        indentWithSpaces(4)
+    }
 }
 
 dependencies {
