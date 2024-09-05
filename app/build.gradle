@@ -6,7 +6,7 @@ plugins {
 
 spotless {
     java {
-        googleJavaFormat("1.15.0")
+        googleJavaFormat("1.23.0")
         indentWithTabs(2)
         indentWithSpaces(4)
     }

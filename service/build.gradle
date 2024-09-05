@@ -1,6 +1,15 @@
 plugins {
     id 'java-library'
     id 'com.bookstore.common-conventions'
+    alias libs.plugins.spotless
+}
+
+spotless {
+    java {
+        googleJavaFormat("1.23.0")
+        indentWithTabs(2)
+        indentWithSpaces(4)
+    }
 }
 
 dependencies {
