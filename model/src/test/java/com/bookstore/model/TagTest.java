@@ -1,14 +1,13 @@
 package com.bookstore.model;
 
-import org.assertj.core.api.AssertionsForInterfaceTypes;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import org.assertj.core.api.AssertionsForInterfaceTypes;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 class TagTest {
 
@@ -77,7 +76,8 @@ class TagTest {
     }
 
     @Test
-    @DisplayName("Equals method should return false when comparing two objects with different non-null fields")
+    @DisplayName(
+            "Equals method should return false when comparing two objects with different non-null fields")
     void testEqualsWithDifferentNonNullFields() {
         Tag tag1 = new Tag();
         tag1.setId(1L);

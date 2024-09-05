@@ -1,7 +1,6 @@
 package com.bookstore.dto;
 
 import com.bookstore.model.Tag;
-
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -26,6 +25,7 @@ public class BookDtoBuilder {
         this.urlId = urlId;
         return this;
     }
+
     public BookDtoBuilder title(String title) {
         this.title = title;
         return this;
@@ -57,26 +57,23 @@ public class BookDtoBuilder {
     }
 
     public BookDtoBuilder tags(List<Tag> tags) {
-        if (tags != null && !tags.isEmpty()){
-            this.tags = tags
-                    .stream()
-                    .map(Tag::getName)
-                    .toList();
+        if (tags != null && !tags.isEmpty()) {
+            this.tags = tags.stream().map(Tag::getName).toList();
         }
 
         return this;
     }
+
     public BookDto build() {
         return new BookDto(
-                    this.id,
-                    this.urlId,
-                    this.title,
-                    this.author,
-                    this.stars,
-                    this.price,
-                    this.favorite,
-                    this.imageUrl,
-                    this.tags
-        );
+                this.id,
+                this.urlId,
+                this.title,
+                this.author,
+                this.stars,
+                this.price,
+                this.favorite,
+                this.imageUrl,
+                this.tags);
     }
 }

@@ -25,41 +25,45 @@ public class TestUtils {
             "{\"id\":1,\"urlId\":\"author-1-title-1\",\"title\":\"Title 1\",\"author\":\"Author 1\",\"stars\":2,\"price\":2.99,\"favorite\":false,\"imageUrl\":\"image/1\",\"tags\":null}";
 
     public static List<BookDtoBuilder> getDefaultBookDtos() {
-        BookDtoBuilder bookDto1 = new BookDtoBuilder()
-                .id(1L)
-                .urlId("author-1-title-1")
-                .title("Title 1")
-                .author("Author 1")
-                .stars(2)
-                .price(new BigDecimal("2.99"))
-                .favorite(false)
-                .imageUrl("image/1");
+        BookDtoBuilder bookDto1 =
+                new BookDtoBuilder()
+                        .id(1L)
+                        .urlId("author-1-title-1")
+                        .title("Title 1")
+                        .author("Author 1")
+                        .stars(2)
+                        .price(new BigDecimal("2.99"))
+                        .favorite(false)
+                        .imageUrl("image/1");
 
-        BookDtoBuilder bookDto2 = new BookDtoBuilder()
-                .id(2L)
-                .urlId("author-2-title-2")
-                .title("Title 2")
-                .author("Author 2")
-                .stars(5)
-                .price(new BigDecimal("3.99"))
-                .favorite(true)
-                .imageUrl("image/2");
+        BookDtoBuilder bookDto2 =
+                new BookDtoBuilder()
+                        .id(2L)
+                        .urlId("author-2-title-2")
+                        .title("Title 2")
+                        .author("Author 2")
+                        .stars(5)
+                        .price(new BigDecimal("3.99"))
+                        .favorite(true)
+                        .imageUrl("image/2");
 
-        BookDtoBuilder blankPropertiesDto = new BookDtoBuilder()
-                .title("")
-                .author("")
-                .stars(2)
-                .price(new BigDecimal("2.99"))
-                .favorite(false)
-                .imageUrl("image/1");
+        BookDtoBuilder blankPropertiesDto =
+                new BookDtoBuilder()
+                        .title("")
+                        .author("")
+                        .stars(2)
+                        .price(new BigDecimal("2.99"))
+                        .favorite(false)
+                        .imageUrl("image/1");
 
-        BookDtoBuilder noUrlIdDto = new BookDtoBuilder()
-                .title("Title 1")
-                .author("Author 1")
-                .stars(2)
-                .price(new BigDecimal("2.99"))
-                .favorite(false)
-                .imageUrl("image/1");
+        BookDtoBuilder noUrlIdDto =
+                new BookDtoBuilder()
+                        .title("Title 1")
+                        .author("Author 1")
+                        .stars(2)
+                        .price(new BigDecimal("2.99"))
+                        .favorite(false)
+                        .imageUrl("image/1");
 
         return List.of(bookDto1, bookDto2, blankPropertiesDto, noUrlIdDto);
     }

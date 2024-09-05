@@ -1,10 +1,17 @@
 package com.bookstore.service;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.bookstore.dto.TagDto;
 import com.bookstore.mapper.TagMapper;
 import com.bookstore.model.Book;
 import com.bookstore.model.Tag;
 import com.bookstore.repository.CommonsRepository;
+import java.util.List;
+import java.util.NoSuchElementException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,31 +19,18 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 @ExtendWith(MockitoExtension.class)
 class CommonsServiceTest {
 
-    @InjectMocks
-    private CommonsService commonsService;
+    @InjectMocks private CommonsService commonsService;
 
-    @Mock
-    private BookService bookService;
+    @Mock private BookService bookService;
 
-    @Mock
-    private TagService tagService;
+    @Mock private TagService tagService;
 
-    @Mock
-    private TagMapper tagMapper;
+    @Mock private TagMapper tagMapper;
 
-    @Mock
-    private CommonsRepository commonsRepository;
+    @Mock private CommonsRepository commonsRepository;
 
     @Test
     @DisplayName("Should throw NoSuchElementException if Tag not found addBookToTag()")

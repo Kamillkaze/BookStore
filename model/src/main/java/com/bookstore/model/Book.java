@@ -1,16 +1,14 @@
 package com.bookstore.model;
 
 import jakarta.persistence.*;
-import org.springframework.lang.NonNull;
-
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
+import org.springframework.lang.NonNull;
 
 @Entity
 @Table(name = "book")
 public class Book {
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,13 +41,11 @@ public class Book {
 
     @ManyToMany(
             fetch = FetchType.LAZY,
-            cascade = { CascadeType.MERGE, CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH }
-    )
+            cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(
-        name = "book_tag",
-        joinColumns = @JoinColumn(name = "book_id"),
-        inverseJoinColumns = @JoinColumn(name = "tag_id")
-    )
+            name = "book_tag",
+            joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private List<Tag> tags;
 
     public Book(@NonNull String urlId, @NonNull String title, @NonNull String author) {
@@ -57,7 +53,17 @@ public class Book {
         this.title = title;
         this.author = author;
     }
-    Book(Long id, @NonNull String urlId, @NonNull String title, @NonNull String author, Integer stars, BigDecimal price, boolean favorite, String imageUrl, List<Tag> tags) {
+
+    Book(
+            Long id,
+            @NonNull String urlId,
+            @NonNull String title,
+            @NonNull String author,
+            Integer stars,
+            BigDecimal price,
+            boolean favorite,
+            String imageUrl,
+            List<Tag> tags) {
         this.id = id;
         this.urlId = urlId;
         this.title = title;
@@ -69,8 +75,7 @@ public class Book {
         this.tags = tags;
     }
 
-    public Book() {
-    }
+    public Book() {}
 
     public void setId(Long id) {
         this.id = id;
@@ -120,7 +125,15 @@ public class Book {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Book book = (Book) o;
-        return favorite == book.favorite && Objects.equals(id, book.id) && Objects.equals(urlId, book.urlId) && Objects.equals(title, book.title) && Objects.equals(author, book.author) && Objects.equals(stars, book.stars) && Objects.equals(price, book.price) && Objects.equals(imageUrl, book.imageUrl) && Objects.equals(tags, book.tags);
+        return favorite == book.favorite
+                && Objects.equals(id, book.id)
+                && Objects.equals(urlId, book.urlId)
+                && Objects.equals(title, book.title)
+                && Objects.equals(author, book.author)
+                && Objects.equals(stars, book.stars)
+                && Objects.equals(price, book.price)
+                && Objects.equals(imageUrl, book.imageUrl)
+                && Objects.equals(tags, book.tags);
     }
 
     @Override

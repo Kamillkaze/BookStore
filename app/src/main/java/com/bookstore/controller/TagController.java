@@ -2,10 +2,9 @@ package com.bookstore.controller;
 
 import com.bookstore.dto.TagDto;
 import com.bookstore.service.TagService;
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/tags")

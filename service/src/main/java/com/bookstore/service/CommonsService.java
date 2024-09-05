@@ -16,7 +16,11 @@ public class CommonsService {
     private final TagMapper tagMapper;
     private final CommonsRepository commonsRepository;
 
-    public CommonsService(BookService bookService, TagService tagService, TagMapper tagMapper, CommonsRepository commonsRepository) {
+    public CommonsService(
+            BookService bookService,
+            TagService tagService,
+            TagMapper tagMapper,
+            CommonsRepository commonsRepository) {
         this.bookService = bookService;
         this.tagService = tagService;
         this.tagMapper = tagMapper;

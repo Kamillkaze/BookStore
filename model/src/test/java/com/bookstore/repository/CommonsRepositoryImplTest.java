@@ -1,28 +1,25 @@
 package com.bookstore.repository;
 
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+
 import com.bookstore.model.Book;
 import com.bookstore.model.Tag;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ContextConfiguration;
 
-import java.util.List;
-
-import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-
 @DataJpaTest
 @ContextConfiguration(classes = TestConfig.class)
 class CommonsRepositoryImplTest {
 
-    @Autowired
-    private CommonsRepositoryImpl commonsRepositoryImpl;
+    @Autowired private CommonsRepositoryImpl commonsRepositoryImpl;
 
-    @PersistenceContext
-    private EntityManager entityManager;
+    @PersistenceContext private EntityManager entityManager;
 
     @Test
     @DisplayName("Should add a row with specified book_id and tag_id to book_tag join table")
@@ -34,10 +31,12 @@ class CommonsRepositoryImplTest {
         entityManager.flush();
 
         commonsRepositoryImpl.addBookToTag(tag.getId(), book.getId());
-        List<?> result = entityManager.createNativeQuery("select * from book_tag where book_id = :bookId and tag_id = :tagId")
-                .setParameter("tagId", tag.getId())
-                .setParameter("bookId", book.getId())
-                .getResultList();
+        List<?> result =
+                entityManager
+                        .createNativeQuery("select * from book_tag where book_id = :bookId and tag_id = :tagId")
+                        .setParameter("tagId", tag.getId())
+                        .setParameter("bookId", book.getId())
+                        .getResultList();
 
         assertThat(result).hasSize(1);
     }
@@ -53,10 +52,12 @@ class CommonsRepositoryImplTest {
         commonsRepositoryImpl.addBookToTag(tag.getId(), book.getId());
 
         commonsRepositoryImpl.removeBookFromTag(tag.getId(), book.getId());
-        List<?> result = entityManager.createNativeQuery("select * from book_tag where book_id = :bookId and tag_id = :tagId")
-                .setParameter("tagId", tag.getId())
-                .setParameter("bookId", book.getId())
-                .getResultList();
+        List<?> result =
+                entityManager
+                        .createNativeQuery("select * from book_tag where book_id = :bookId and tag_id = :tagId")
+                        .setParameter("tagId", tag.getId())
+                        .setParameter("bookId", book.getId())
+                        .getResultList();
 
         assertThat(result).isEmpty();
     }

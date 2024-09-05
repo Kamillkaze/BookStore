@@ -5,10 +5,9 @@ import com.bookstore.mapper.TagMapper;
 import com.bookstore.model.Tag;
 import com.bookstore.repository.TagRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.NoSuchElementException;
+import org.springframework.stereotype.Service;
 
 @Service
 public class TagService {
@@ -31,7 +30,7 @@ public class TagService {
         int rowsAffected = tagRepository.deleteByName(tagName);
 
         if (rowsAffected == 0) {
-           throw new NoSuchElementException();
+            throw new NoSuchElementException();
         }
     }
 
@@ -40,7 +39,6 @@ public class TagService {
     }
 
     public Tag findTagByName(String name) {
-        return tagRepository.findByName(name)
-                .orElseThrow(NoSuchElementException::new);
+        return tagRepository.findByName(name).orElseThrow(NoSuchElementException::new);
     }
 }

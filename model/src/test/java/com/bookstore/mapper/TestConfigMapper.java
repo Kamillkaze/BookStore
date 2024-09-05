@@ -5,5 +5,4 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ComponentScan(basePackages = "com.bookstore.mapper")
-public class TestConfigMapper {
-}
+public class TestConfigMapper {}

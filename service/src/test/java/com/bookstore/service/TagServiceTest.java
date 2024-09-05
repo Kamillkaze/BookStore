@@ -1,8 +1,16 @@
 package com.bookstore.service;
 
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.bookstore.mapper.TagMapper;
 import com.bookstore.model.Tag;
 import com.bookstore.repository.TagRepository;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,26 +18,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.NoSuchElementException;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 @ExtendWith(MockitoExtension.class)
 class TagServiceTest {
 
-    @InjectMocks
-    private TagService tagService;
+    @InjectMocks private TagService tagService;
 
-    @Mock
-    private TagRepository tagRepository;
+    @Mock private TagRepository tagRepository;
 
-    @Mock
-    private TagMapper tagMapper;
+    @Mock private TagMapper tagMapper;
 
     @Test
     @DisplayName("Should add new tag properly")
@@ -52,8 +48,7 @@ class TagServiceTest {
         String tagName = "tag1";
         when(tagRepository.deleteByName(tagName)).thenReturn(1);
 
-        assertThatCode(() -> tagService.deleteATag(tagName))
-                .doesNotThrowAnyException();
+        assertThatCode(() -> tagService.deleteATag(tagName)).doesNotThrowAnyException();
 
         verify(tagRepository).deleteByName(tagName);
     }

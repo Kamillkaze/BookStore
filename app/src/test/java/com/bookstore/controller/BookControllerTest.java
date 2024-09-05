@@ -1,10 +1,19 @@
 package com.bookstore.controller;
 
+import static com.bookstore.controller.TestUtils.getDefaultBookDtos;
+import static com.bookstore.controller.TestUtils.getResponses;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.Mockito.*;
+
 import com.bookstore.dto.BookDto;
 import com.bookstore.model.Tag;
 import com.bookstore.security.SecurityConfig;
 import com.bookstore.service.BookService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.List;
+import java.util.NoSuchElementException;
+import javax.sql.DataSource;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -21,16 +30,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
-import javax.sql.DataSource;
-import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.List;
-import java.util.NoSuchElementException;
-
-import static com.bookstore.controller.TestUtils.getDefaultBookDtos;
-import static com.bookstore.controller.TestUtils.getResponses;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.mockito.Mockito.*;
 
 @Import(SecurityConfig.class)
 @WebMvcTest(controllers = BookController.class)
@@ -56,20 +55,18 @@ class BookControllerTest {
         }
     }
 
-    @MockBean
-    private BookService bookService;
+    @MockBean private BookService bookService;
 
-    @Autowired
-    private MockMvc mockMvc;
+    @Autowired private MockMvc mockMvc;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    @Autowired private ObjectMapper objectMapper;
 
     @Test
     @DisplayName("Should get all books correctly getAllBooks()")
     @WithMockUser
     void shouldGetAllBooksCorrectly() throws Exception {
-        BookDto bookDto1 = getDefaultBookDtos().get(BOOK_DTO_1_INDEX).tags(List.of(new Tag("tag1"))).build();
+        BookDto bookDto1 =
+                getDefaultBookDtos().get(BOOK_DTO_1_INDEX).tags(List.of(new Tag("tag1"))).build();
         BookDto bookDto2 = getDefaultBookDtos().get(BOOK_DTO_2_INDEX).build();
         when(bookService.getAllBooks()).thenReturn(List.of(bookDto1, bookDto2));
         String expected = getResponses().get(ALL_BOOKS_RESPONSE_INDEX);
@@ -106,14 +103,16 @@ class BookControllerTest {
         MvcResult result = mockMvc.perform(request).andReturn();
 
         assertThat(result.getResponse().getStatus()).isEqualTo(404);
-        assertThat(result.getResponse().getContentAsString()).isEqualTo("An object with specified property does not exist");
+        assertThat(result.getResponse().getContentAsString())
+                .isEqualTo("An object with specified property does not exist");
     }
 
     @Test
     @DisplayName("Should return a book by id correctly getBookById()")
     @WithMockUser
     void getBookByIdCorrectly() throws Exception {
-        BookDto bookDto = getDefaultBookDtos().get(BOOK_DTO_1_INDEX).tags(List.of(new Tag("tag1"))).build();
+        BookDto bookDto =
+                getDefaultBookDtos().get(BOOK_DTO_1_INDEX).tags(List.of(new Tag("tag1"))).build();
         String urlId = bookDto.getUrlId();
         when(bookService.getBookById(urlId)).thenReturn(bookDto);
         String expected = getResponses().get(BOOK_BY_ID_RESPONSE_INDEX);
@@ -126,7 +125,8 @@ class BookControllerTest {
     }
 
     @Test
-    @DisplayName("Should return an empty list if books with a specified tag do not exist or the tag does not exist getAllBooksByTag()")
+    @DisplayName(
+            "Should return an empty list if books with a specified tag do not exist or the tag does not exist getAllBooksByTag()")
     @WithMockUser
     void getBooksByTagWhenTagNotExist() throws Exception {
         String tagName = "tag1";
@@ -159,7 +159,8 @@ class BookControllerTest {
     }
 
     @Test
-    @DisplayName("Should return an empty list if books with a specified phrase in urlId do not exist getAllBooksByTag()")
+    @DisplayName(
+            "Should return an empty list if books with a specified phrase in urlId do not exist getAllBooksByTag()")
     @WithMockUser
     void getBooksByPhraseWhenPhraseNotExists() throws Exception {
         String phrase = "tag1";
@@ -174,7 +175,8 @@ class BookControllerTest {
     }
 
     @Test
-    @DisplayName("Should return a list of books with a specified phrase in urlId correctly getAllBooksByPhrase()")
+    @DisplayName(
+            "Should return a list of books with a specified phrase in urlId correctly getAllBooksByPhrase()")
     @WithMockUser
     void getBooksByPhraseCorrect() throws Exception {
         String phrase = "author";
@@ -198,10 +200,10 @@ class BookControllerTest {
         String input = objectMapper.writeValueAsString(bookDto);
         String expected = getResponses().get(BLANK_PROPERTIES_RESPONSE_INDEX);
 
-        RequestBuilder request = MockMvcRequestBuilders
-                .post("/api/v1/books")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(input);
+        RequestBuilder request =
+                MockMvcRequestBuilders.post("/api/v1/books")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(input);
         MvcResult result = mockMvc.perform(request).andReturn();
 
         assertThat(result.getResponse().getStatus()).isEqualTo(400);
@@ -215,10 +217,10 @@ class BookControllerTest {
         String input = "";
         String expected = "Invalid request body";
 
-        RequestBuilder request = MockMvcRequestBuilders
-                .post("/api/v1/books")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(input);
+        RequestBuilder request =
+                MockMvcRequestBuilders.post("/api/v1/books")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(input);
         MvcResult result = mockMvc.perform(request).andReturn();
 
         assertThat(result.getResponse().getStatus()).isEqualTo(400);
@@ -226,20 +228,24 @@ class BookControllerTest {
     }
 
     @Test
-    @DisplayName("Should return error when trying to add an entity with already existing author and title (results in duplicated urlId) addBook()")
+    @DisplayName(
+            "Should return error when trying to add an entity with already existing author and title (results in duplicated urlId) addBook()")
     @WithMockUser(roles = "ADMIN")
     void addBookWhenDuplicatedId() throws Exception {
         BookDto bookDto = getDefaultBookDtos().get(BOOK_DTO_1_INDEX).build();
         String input = objectMapper.writeValueAsString(bookDto);
         String errorMessage = "could not execute statement [Duplicate entry";
-        Mockito.doAnswer(invocation -> {
-            throw new SQLIntegrityConstraintViolationException(errorMessage);
-        }).when(bookService).addBook(bookDto);
+        Mockito.doAnswer(
+                        invocation -> {
+                            throw new SQLIntegrityConstraintViolationException(errorMessage);
+                        })
+                .when(bookService)
+                .addBook(bookDto);
 
-        RequestBuilder request = MockMvcRequestBuilders
-                .post("/api/v1/books")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(input);
+        RequestBuilder request =
+                MockMvcRequestBuilders.post("/api/v1/books")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(input);
         MvcResult result = mockMvc.perform(request).andReturn();
 
         assertThat(result.getResponse().getStatus()).isEqualTo(400);
@@ -256,10 +262,10 @@ class BookControllerTest {
         String expected = getResponses().get(ADD_BOOK_RESPONSE_INDEX);
         when(bookService.addBook(bookDto)).thenReturn(created);
 
-        RequestBuilder request = MockMvcRequestBuilders
-                .post("/api/v1/books")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(input);
+        RequestBuilder request =
+                MockMvcRequestBuilders.post("/api/v1/books")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(input);
         MvcResult result = mockMvc.perform(request).andReturn();
 
         assertThat(result.getResponse().getStatus()).isEqualTo(201);
@@ -271,16 +277,19 @@ class BookControllerTest {
     @WithMockUser(roles = "ADMIN")
     void deleteBookWhenBookWithProvidedIdDoesNotExist() throws Exception {
         String urlId = "not-existing-url-id";
-        doAnswer(invocation -> {
-            throw new NoSuchElementException();
-        }).when(bookService).deleteABook(urlId);
+        doAnswer(
+                        invocation -> {
+                            throw new NoSuchElementException();
+                        })
+                .when(bookService)
+                .deleteABook(urlId);
 
-        RequestBuilder request = MockMvcRequestBuilders
-                .delete("/api/v1/books/" + urlId);
+        RequestBuilder request = MockMvcRequestBuilders.delete("/api/v1/books/" + urlId);
         MvcResult result = mockMvc.perform(request).andReturn();
 
         assertThat(result.getResponse().getStatus()).isEqualTo(404);
-        assertThat(result.getResponse().getContentAsString()).isEqualTo("An object with specified property does not exist");
+        assertThat(result.getResponse().getContentAsString())
+                .isEqualTo("An object with specified property does not exist");
     }
 
     @Test
@@ -289,11 +298,11 @@ class BookControllerTest {
     void deleteBookCorrect() throws Exception {
         String urlId = "url-id";
 
-        RequestBuilder request = MockMvcRequestBuilders
-                .delete("/api/v1/books/" + urlId);
+        RequestBuilder request = MockMvcRequestBuilders.delete("/api/v1/books/" + urlId);
         MvcResult result = mockMvc.perform(request).andReturn();
 
         assertThat(result.getResponse().getStatus()).isEqualTo(200);
-        assertThat(result.getResponse().getContentAsString()).isEqualTo("Record with id: \"" + urlId + "\" successfully removed");
+        assertThat(result.getResponse().getContentAsString())
+                .isEqualTo("Record with id: \"" + urlId + "\" successfully removed");
     }
 }

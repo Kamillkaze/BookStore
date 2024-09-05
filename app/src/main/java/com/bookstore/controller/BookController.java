@@ -3,11 +3,10 @@ package com.bookstore.controller;
 import com.bookstore.dto.BookDto;
 import com.bookstore.service.BookService;
 import jakarta.validation.Valid;
+import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/books")
@@ -36,14 +35,16 @@ public class BookController {
     }
 
     @GetMapping("/tag/{tagName}")
-    public ResponseEntity<List<BookDto>> getAllBooksByTag(@PathVariable(value = "tagName") String tagName) {
+    public ResponseEntity<List<BookDto>> getAllBooksByTag(
+            @PathVariable(value = "tagName") String tagName) {
         List<BookDto> allBooksByTag = bookService.getAllBooksByTag(tagName);
 
         return ResponseEntity.ok(allBooksByTag);
     }
 
     @GetMapping("/phrase/{phrase}")
-    public ResponseEntity<List<BookDto>> getAllBooksByPhrase(@PathVariable(value = "phrase") String phrase) {
+    public ResponseEntity<List<BookDto>> getAllBooksByPhrase(
+            @PathVariable(value = "phrase") String phrase) {
         List<BookDto> allBooksByPhrase = bookService.getAllBooksByPhrase(phrase);
 
         return ResponseEntity.ok(allBooksByPhrase);

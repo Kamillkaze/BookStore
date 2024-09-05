@@ -1,7 +1,6 @@
 package com.bookstore.model;
 
 import com.bookstore.utils.UrlIdGenerator;
-
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -31,6 +30,7 @@ public class BookBuilder {
         this.urlId = UrlIdGenerator.generate(author, title);
         return this;
     }
+
     public BookBuilder author(String author) {
         this.author = author;
         return this;
@@ -71,7 +71,6 @@ public class BookBuilder {
                 this.price,
                 this.favorite,
                 this.imageUrl,
-                this.tags
-        );
+                this.tags);
     }
 }

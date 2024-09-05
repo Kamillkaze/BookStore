@@ -1,9 +1,15 @@
 package com.bookstore.controller;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import com.bookstore.dto.TagDto;
 import com.bookstore.security.SecurityConfig;
 import com.bookstore.service.CommonsService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.NoSuchElementException;
+import javax.sql.DataSource;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,13 +25,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import javax.sql.DataSource;
-import java.util.NoSuchElementException;
-
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 @Import(SecurityConfig.class)
 @WebMvcTest(controllers = CommonsController.class)
 class CommonsControllerTest {
@@ -39,14 +38,11 @@ class CommonsControllerTest {
         }
     }
 
-    @MockBean
-    private CommonsService commonsService;
+    @MockBean private CommonsService commonsService;
 
-    @Autowired
-    private MockMvc mockMvc;
+    @Autowired private MockMvc mockMvc;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    @Autowired private ObjectMapper objectMapper;
 
     @Test
     @DisplayName("Should handle NoSuchElementException thrown in service addBookToTag()")
@@ -56,13 +52,13 @@ class CommonsControllerTest {
         String bookUrlId = "url-id";
         when(commonsService.addBookToTag(tagName, bookUrlId)).thenThrow(new NoSuchElementException());
 
-        RequestBuilder request = MockMvcRequestBuilders
-                .post("/api/v1/commons/tag/" + tagName)
-                .param("bookUrlId", bookUrlId);
+        RequestBuilder request =
+                MockMvcRequestBuilders.post("/api/v1/commons/tag/" + tagName).param("bookUrlId", bookUrlId);
         MvcResult result = mockMvc.perform(request).andReturn();
 
         assertThat(result.getResponse().getStatus()).isEqualTo(404);
-        assertThat(result.getResponse().getContentAsString()).isEqualTo("An object with specified property does not exist");
+        assertThat(result.getResponse().getContentAsString())
+                .isEqualTo("An object with specified property does not exist");
     }
 
     @Test
@@ -71,12 +67,12 @@ class CommonsControllerTest {
     void addBookToTagWhenNoBookUrlId() throws Exception {
         String tagName = "tag1";
 
-        RequestBuilder request = MockMvcRequestBuilders
-                .post("/api/v1/commons/tag/" + tagName);
+        RequestBuilder request = MockMvcRequestBuilders.post("/api/v1/commons/tag/" + tagName);
         MvcResult result = mockMvc.perform(request).andReturn();
 
         assertThat(result.getResponse().getStatus()).isEqualTo(400);
-        assertThat(result.getResponse().getContentAsString()).isEqualTo("Missing request parameter: bookUrlId");
+        assertThat(result.getResponse().getContentAsString())
+                .isEqualTo("Missing request parameter: bookUrlId");
     }
 
     @Test
@@ -89,9 +85,8 @@ class CommonsControllerTest {
         String expected = objectMapper.writeValueAsString(tagDto);
         when(commonsService.addBookToTag(tagName, bookUrlId)).thenReturn(tagDto);
 
-        RequestBuilder request = MockMvcRequestBuilders
-                .post("/api/v1/commons/tag/" + tagName)
-                .param("bookUrlId", bookUrlId);
+        RequestBuilder request =
+                MockMvcRequestBuilders.post("/api/v1/commons/tag/" + tagName).param("bookUrlId", bookUrlId);
         MvcResult result = mockMvc.perform(request).andReturn();
 
         assertThat(result.getResponse().getStatus()).isEqualTo(200);
@@ -104,15 +99,17 @@ class CommonsControllerTest {
     void removeBookFromTagWhenNoSuchElementThrown() throws Exception {
         String tagName = "tag1";
         String bookUrlId = "url-id";
-        when(commonsService.removeBookFromTag(tagName, bookUrlId)).thenThrow(new NoSuchElementException());
+        when(commonsService.removeBookFromTag(tagName, bookUrlId))
+                .thenThrow(new NoSuchElementException());
 
-        RequestBuilder request = MockMvcRequestBuilders
-                .delete("/api/v1/commons/tag/" + tagName)
-                .param("bookUrlId", bookUrlId);
+        RequestBuilder request =
+                MockMvcRequestBuilders.delete("/api/v1/commons/tag/" + tagName)
+                        .param("bookUrlId", bookUrlId);
         MvcResult result = mockMvc.perform(request).andReturn();
 
         assertThat(result.getResponse().getStatus()).isEqualTo(404);
-        assertThat(result.getResponse().getContentAsString()).isEqualTo("An object with specified property does not exist");
+        assertThat(result.getResponse().getContentAsString())
+                .isEqualTo("An object with specified property does not exist");
     }
 
     @Test
@@ -121,13 +118,12 @@ class CommonsControllerTest {
     void removeBookFromTagWhenNoBookUrlId() throws Exception {
         String tagName = "tag1";
 
-        RequestBuilder request = MockMvcRequestBuilders
-                .delete("/api/v1/commons/tag/" + tagName);
+        RequestBuilder request = MockMvcRequestBuilders.delete("/api/v1/commons/tag/" + tagName);
         MvcResult result = mockMvc.perform(request).andReturn();
 
         assertThat(result.getResponse().getStatus()).isEqualTo(400);
-        assertThat(result.getResponse().getContentAsString()).isEqualTo("Missing request parameter: bookUrlId");
-
+        assertThat(result.getResponse().getContentAsString())
+                .isEqualTo("Missing request parameter: bookUrlId");
     }
 
     @Test
@@ -140,9 +136,9 @@ class CommonsControllerTest {
         String expected = objectMapper.writeValueAsString(tagDto);
         when(commonsService.removeBookFromTag(tagName, bookUrlId)).thenReturn(tagDto);
 
-        RequestBuilder request = MockMvcRequestBuilders
-                .delete("/api/v1/commons/tag/" + tagName)
-                .param("bookUrlId", bookUrlId);
+        RequestBuilder request =
+                MockMvcRequestBuilders.delete("/api/v1/commons/tag/" + tagName)
+                        .param("bookUrlId", bookUrlId);
         MvcResult result = mockMvc.perform(request).andReturn();
 
         assertThat(result.getResponse().getStatus()).isEqualTo(200);

@@ -9,5 +9,4 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @ComponentScan(basePackages = "com.bookstore")
 @EnableJpaRepositories(basePackages = "com.bookstore.repository")
 @EntityScan(basePackages = "com.bookstore.model")
-public class TestConfig {
-}
+public class TestConfig {}

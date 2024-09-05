@@ -5,10 +5,9 @@ import com.bookstore.mapper.BookMapper;
 import com.bookstore.model.Book;
 import com.bookstore.repository.BookRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.NoSuchElementException;
+import org.springframework.stereotype.Service;
 
 @Service
 public class BookService {
@@ -45,8 +44,7 @@ public class BookService {
     }
 
     public Book getBookEntityById(String urlId) {
-        return bookRepository.findByUrlId(urlId)
-                            .orElseThrow(NoSuchElementException::new);
+        return bookRepository.findByUrlId(urlId).orElseThrow(NoSuchElementException::new);
     }
 
     public BookDto getBookById(String urlId) {
@@ -66,9 +64,6 @@ public class BookService {
     }
 
     private List<BookDto> convertToBookDtoList(List<Book> books) {
-        return books
-                .stream()
-                .map(bookMapper::toDto)
-                .toList();
+        return books.stream().map(bookMapper::toDto).toList();
     }
 }

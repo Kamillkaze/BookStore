@@ -1,5 +1,9 @@
 package com.bookstore.advice;
 
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.NoSuchElementException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -8,19 +12,15 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.sql.SQLIntegrityConstraintViolationException;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.NoSuchElementException;
-
 @RestControllerAdvice
 public class ApiExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Object> handleInvalidBook(MethodArgumentNotValidException e) {
         Map<String, String> errorMap = new HashMap<>();
-        e.getBindingResult().getFieldErrors().forEach(error -> errorMap.put(error.getField(), error.getDefaultMessage()));
+        e.getBindingResult()
+                .getFieldErrors()
+                .forEach(error -> errorMap.put(error.getField(), error.getDefaultMessage()));
 
         return new ResponseEntity<>(errorMap, HttpStatus.BAD_REQUEST);
     }
@@ -46,7 +46,8 @@ public class ApiExceptionHandler {
 
     // when there is no required request param
     @ExceptionHandler(MissingServletRequestParameterException.class)
-    public ResponseEntity<String> handleMissingServletRequestParameterException(MissingServletRequestParameterException ex) {
+    public ResponseEntity<String> handleMissingServletRequestParameterException(
+            MissingServletRequestParameterException ex) {
         String errorMessage = "Missing request parameter: " + ex.getParameterName();
         return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
     }

@@ -1,11 +1,10 @@
 package com.bookstore.model;
 
 import jakarta.persistence.*;
-import org.springframework.lang.NonNull;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import org.springframework.lang.NonNull;
 
 @Entity
 @Table(name = "tag")
@@ -22,17 +21,14 @@ public class Tag {
 
     @ManyToMany(
             fetch = FetchType.LAZY,
-            cascade = { CascadeType.MERGE, CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH }
-    )
+            cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(
             name = "book_tag",
             joinColumns = @JoinColumn(name = "tag_id"),
-            inverseJoinColumns = @JoinColumn(name = "book_id")
-    )
+            inverseJoinColumns = @JoinColumn(name = "book_id"))
     private List<Book> books;
 
-    public Tag() {
-    }
+    public Tag() {}
 
     public Tag(@NonNull String name) {
         this.name = name;
@@ -76,7 +72,9 @@ public class Tag {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Tag tag = (Tag) o;
-        return Objects.equals(id, tag.id) && Objects.equals(name, tag.name) && Objects.equals(books, tag.books);
+        return Objects.equals(id, tag.id)
+                && Objects.equals(name, tag.name)
+                && Objects.equals(books, tag.books);
     }
 
     @Override
