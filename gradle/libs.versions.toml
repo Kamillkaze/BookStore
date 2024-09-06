@@ -4,6 +4,7 @@ apache-commons = "3.0"
 mysql = "8.4.0"
 h2 = "2.3.230"
 spring-security-test = "6.3.3"
+spotless = "6.25.0"
 
 [libraries]
 apache-commons = { module = "org.apache.commons:commons-lang3", version.ref = "apache-commons"}
@@ -18,4 +19,4 @@ spring-security-test = { module = "org.springframework.security:spring-security-
 
 [plugins]
 spring-boot-plugin = { id = "org.springframework.boot", version.ref = "spring-boot" }
-spotless = "com.diffplug.spotless:6.25.0"
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
