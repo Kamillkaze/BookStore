@@ -32,8 +32,11 @@ jobs:
       - name: Grant executable permissions to gradle
         run: chmod +x ./gradlew
 
-      - name: Build, Test, and Verify
-        run: ./gradlew clean build
+      - name: Test
+        run: ./gradlew clean test
+
+      - name: Coverage
+        run: ./gradlew clean jacocoTestCoverageVerification
 
   style:
     name: Style
@@ -51,4 +54,4 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Run spotlessCheck
-        run: ./gradlew spotlessCheck
+        run: ./gradlew clean spotlessCheck
