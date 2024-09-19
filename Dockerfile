@@ -5,7 +5,7 @@ FROM openjdk:17-jdk-alpine
 WORKDIR /app
 
 # Copy the jar file from the host machine to the container
-COPY target/myapp.jar /app/myapp.jar
+COPY app/build/libs/app.jar /app/app.jar
 
 # Specify the command to run the Java application
-ENTRYPOINT ["java", "-jar", "myapp.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
