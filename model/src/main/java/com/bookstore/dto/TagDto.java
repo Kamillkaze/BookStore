@@ -1,4 +1,3 @@
 package com.bookstore.dto;
 
-public record TagDto(String name, Long count) {
-}
+public record TagDto(String name, Long count) {}
