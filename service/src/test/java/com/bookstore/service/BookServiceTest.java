@@ -43,7 +43,6 @@ class BookServiceTest {
                         .author("author1")
                         .title("title1")
                         .build();
-        Book book = new Book("author1-title1", "author1", "title1");
         Book bookSaved =
                 new BookBuilder()
                         .id(1L)
@@ -51,6 +50,7 @@ class BookServiceTest {
                         .author("author1")
                         .title("title1")
                         .build();
+        Book book = new Book("author1-title1", "author1", "title1");
         when(bookMapper.toEntity(bookDto)).thenReturn(book);
         when(bookRepository.save(book)).thenReturn(bookSaved);
         when(bookMapper.toDto(bookSaved)).thenReturn(expected);
