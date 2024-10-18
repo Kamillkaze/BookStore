@@ -17,7 +17,7 @@ dependencies {
     implementation libs.mysql.connector
     implementation libs.spring.boot.validation
     implementation libs.apache.commons
-    implementation libs.flyway
+    implementation libs.flyway.mysql
     testImplementation libs.spring.boot.test
     testImplementation libs.h2.db
 }

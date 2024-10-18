@@ -5,8 +5,7 @@ mysql = "8.4.0"
 h2 = "2.3.230"
 spring-security-test = "6.3.3"
 spotless = "6.25.0"
-flyway = "10.19.0"
-mysql-socket-factory = "1.21.0"
+flyway-mysql = "10.20.0"
 
 [libraries]
 apache-commons = { module = "org.apache.commons:commons-lang3", version.ref = "apache-commons"}
@@ -18,8 +17,7 @@ h2-db = { module = "com.h2database:h2", version.ref = "h2" }
 spring-boot-validation = { module = "org.springframework.boot:spring-boot-starter-validation", version.ref = "spring-boot" }
 spring-boot-security = { module = "org.springframework.boot:spring-boot-starter-security", version.ref = "spring-boot"}
 spring-security-test = { module = "org.springframework.security:spring-security-test", version.ref = "spring-security-test" }
-flyway = { module = "org.flywaydb:flyway-core", version.ref = "flyway" }
-mysql-socket-factory = { module = "com.google.cloud.sql:mysql-socket-factory-connector-j-8", version.ref = "mysql-socket-factory" }
+flyway-mysql = { module = "org.flywaydb:flyway-mysql", version.ref = "flyway-mysql" }
 
 [plugins]
 spring-boot-plugin = { id = "org.springframework.boot", version.ref = "spring-boot" }
