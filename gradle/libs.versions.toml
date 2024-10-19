@@ -22,3 +22,4 @@ flyway-mysql = { module = "org.flywaydb:flyway-mysql", version.ref = "flyway-mys
 [plugins]
 spring-boot-plugin = { id = "org.springframework.boot", version.ref = "spring-boot" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
+flyway = { id = "org.flywaydb.flyway", version.ref = "flyway-mysql" }
