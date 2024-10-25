@@ -9,6 +9,9 @@ jobs:
     name: Deploy
     runs-on: ubuntu-latest
 
+    env:
+      DB_URL_BOOKSTORE: ${{ secrets.DB_URL_BOOKSTORE }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
