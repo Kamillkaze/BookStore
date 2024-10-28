@@ -14,6 +14,8 @@ jobs:
 
     env:
       DB_URL_BOOKSTORE: ${{ secrets.DB_URL_BOOKSTORE }}
+      DB_USERNAME_BOOKSTORE: ${{ secrets.DB_USERNAME_BOOKSTORE }}
+      DB_PASSWORD_BOOKSTORE: ${{ secrets.DB_PASSWORD_BOOKSTORE }}
 
     steps:
       - name: Checkout
