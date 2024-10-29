@@ -43,3 +43,6 @@ jobs:
 
       - name: 'Use gcloud CLI'
         run: 'gcloud info'
+
+      - name: 'Push image to Google Artifact Registry'
+        run: gcloud builds submit --tag europe-central2-docker.pkg.dev/bookstore-438806/bookstore-ar-repo/bookstore:latest .
