@@ -1,6 +1,8 @@
 # Use an official OpenJDK runtime as a parent image
 FROM openjdk:17-jdk-alpine
 
+RUN apt-get update && apt-get install -y ca-certificates
+
 # Set the working directory inside the container
 WORKDIR /app
 
