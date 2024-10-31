@@ -17,6 +17,7 @@ dependencies {
     implementation libs.spring.boot.web
     implementation libs.spring.boot.validation
     implementation libs.spring.boot.security
+    implementation libs.dotenv.java
     testImplementation libs.spring.boot.test
     testImplementation libs.spring.security.test
 }

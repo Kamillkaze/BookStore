@@ -6,6 +6,7 @@ h2 = "2.3.230"
 spring-security-test = "6.3.3"
 spotless = "6.25.0"
 flyway-mysql = "10.20.0"
+dotenv-java = "3.0.2"
 
 [libraries]
 apache-commons = { module = "org.apache.commons:commons-lang3", version.ref = "apache-commons"}
@@ -18,6 +19,7 @@ spring-boot-validation = { module = "org.springframework.boot:spring-boot-starte
 spring-boot-security = { module = "org.springframework.boot:spring-boot-starter-security", version.ref = "spring-boot"}
 spring-security-test = { module = "org.springframework.security:spring-security-test", version.ref = "spring-security-test" }
 flyway-mysql = { module = "org.flywaydb:flyway-mysql", version.ref = "flyway-mysql" }
+dotenv-java = { module = "io.github.cdimascio:dotenv-java", version.ref = "dotenv-java" }
 
 [plugins]
 spring-boot-plugin = { id = "org.springframework.boot", version.ref = "spring-boot" }
