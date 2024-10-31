@@ -6,7 +6,9 @@ WORKDIR /app
 
 # Copy the jar file from the host machine to the container
 COPY app.jar /app/app.jar
-ADD env /app/.env
+
+# Tried to do "COPY .env /app/.env" - the 1st dot caused the command to fail with "file not found"
+COPY env /app/.env
 
 # Specify the command to run the Java application
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]
