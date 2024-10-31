@@ -49,3 +49,6 @@ jobs:
 
       - name: Push image to Google Artifact Registry
         run: gcloud builds submit --tag europe-central2-docker.pkg.dev/bookstore-438806/bookstore-ar-repo/bookstore:latest .
+
+      - name: Deploy to Cloud Run
+        run: gcloud run deploy bookstore --image europe-central2-docker.pkg.dev/bookstore-438806/bookstore-ar-repo/bookstore:latest --region europe-central2 --allow-unauthenticated --project bookstore-438806 --max-instances=4
