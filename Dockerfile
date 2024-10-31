@@ -8,4 +8,4 @@ WORKDIR /app
 COPY app/build/libs/app.jar /app/app.jar
 
 # Specify the command to run the Java application
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]
