@@ -31,6 +31,9 @@ jobs:
       - name: List files
         run: ls -la
 
+      - name: Print .env
+        run: cat .env
+
       - name: Build
         run: ./gradlew clean build
 
@@ -50,6 +53,9 @@ jobs:
 
       - name: List files 2
         run: ls -la
+
+      - name: Print .env 2
+        run: cat .env
 
       - name: Push image to Google Artifact Registry
         run: gcloud builds submit --tag europe-central2-docker.pkg.dev/bookstore-438806/bookstore-ar-repo/bookstore:latest .
