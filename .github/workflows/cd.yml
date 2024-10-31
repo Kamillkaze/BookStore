@@ -29,6 +29,8 @@ jobs:
         run: |
           touch .env
           echo DB_USERNAME_BOOKSTORE=${{ secrets.DB_USERNAME_BOOKSTORE }} >> .env
+          echo DB_URL_BOOKSTORE=${{ secrets.DB_URL_BOOKSTORE }} >> .env
+          echo DB_PASSWORD_BOOKSTORE=${{ secrets.DB_PASSWORD_BOOKSTORE }} >> .env
           cat .env
 
       - name: List files
