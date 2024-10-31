@@ -6,6 +6,7 @@ WORKDIR /app
 
 # Copy the jar file from the host machine to the container
 COPY app.jar /app/app.jar
+COPY .env /app/.env
 
 # Specify the command to run the Java application
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]

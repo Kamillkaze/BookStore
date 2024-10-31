@@ -12,11 +12,6 @@ jobs:
     name: Deploy
     runs-on: ubuntu-latest
 
-    env:
-      DB_URL_BOOKSTORE: ${{ secrets.DB_URL_BOOKSTORE }}
-      DB_USERNAME_BOOKSTORE: ${{ secrets.DB_USERNAME_BOOKSTORE }}
-      DB_PASSWORD_BOOKSTORE: ${{ secrets.DB_PASSWORD_BOOKSTORE }}
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -29,6 +24,9 @@ jobs:
 
       - name: Grant executable permissions to gradle
         run: chmod +x ./gradlew
+
+      - name: Set up .env
+        run: echo ${{ secrets.ENV_FILE_BOOKSTORE }} > .env
 
       - name: Build
         run: ./gradlew clean build
