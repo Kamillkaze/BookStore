@@ -1,9 +1,11 @@
 package com.bookstore.dto;
 
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -29,6 +31,9 @@ public class BookDto {
     @NotNull(message = "Image should not be null")
     private String imageUrl;
 
+    @Column(name = "last_modified")
+    private LocalDateTime lastModified;
+
     private List<String> tags;
 
     public BookDto() {}
@@ -42,6 +47,7 @@ public class BookDto {
             BigDecimal price,
             boolean favorite,
             String imageUrl,
+            LocalDateTime lastModified,
             List<String> tags) {
         this.id = id;
         this.urlId = urlId;
@@ -51,6 +57,7 @@ public class BookDto {
         this.price = price;
         this.favorite = favorite;
         this.imageUrl = imageUrl;
+        this.lastModified = lastModified;
         this.tags = tags;
     }
 
@@ -86,6 +93,10 @@ public class BookDto {
         return imageUrl;
     }
 
+    public LocalDateTime getLastModified() {
+        return lastModified;
+    }
+
     public List<String> getTags() {
         return tags;
     }
@@ -103,11 +114,12 @@ public class BookDto {
                 && Objects.equals(stars, bookDto.stars)
                 && Objects.equals(price, bookDto.price)
                 && Objects.equals(imageUrl, bookDto.imageUrl)
+                && Objects.equals(lastModified, bookDto.lastModified)
                 && Objects.equals(tags, bookDto.tags);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, urlId, title, author, stars, price, favorite, imageUrl, tags);
+        return Objects.hash(id, urlId, title, author, stars, price, favorite, imageUrl, lastModified, tags);
     }
 }

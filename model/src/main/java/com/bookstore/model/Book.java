@@ -2,6 +2,7 @@ package com.bookstore.model;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import org.springframework.lang.NonNull;
@@ -39,6 +40,9 @@ public class Book {
     @Column(name = "image_url")
     private String imageUrl;
 
+    @Column(name = "last_modified")
+    private LocalDateTime lastModified;
+
     @ManyToMany(
             fetch = FetchType.LAZY,
             cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH})
@@ -63,6 +67,7 @@ public class Book {
             BigDecimal price,
             boolean favorite,
             String imageUrl,
+            LocalDateTime lastModified,
             List<Tag> tags) {
         this.id = id;
         this.urlId = urlId;
@@ -72,6 +77,7 @@ public class Book {
         this.price = price;
         this.favorite = favorite;
         this.imageUrl = imageUrl;
+        this.lastModified = lastModified;
         this.tags = tags;
     }
 
@@ -116,6 +122,10 @@ public class Book {
         return imageUrl;
     }
 
+    public LocalDateTime getLastModified() {
+        return lastModified;
+    }
+
     public List<Tag> getTags() {
         return tags;
     }
@@ -133,11 +143,12 @@ public class Book {
                 && Objects.equals(stars, book.stars)
                 && Objects.equals(price, book.price)
                 && Objects.equals(imageUrl, book.imageUrl)
+                && Objects.equals(lastModified, book.lastModified)
                 && Objects.equals(tags, book.tags);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, urlId, title, author, stars, price, favorite, imageUrl, tags);
+        return Objects.hash(id, urlId, title, author, stars, price, favorite, imageUrl, lastModified, tags);
     }
 }

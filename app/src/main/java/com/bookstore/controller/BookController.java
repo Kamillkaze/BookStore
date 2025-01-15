@@ -57,6 +57,13 @@ public class BookController {
         return new ResponseEntity<>(returned, HttpStatus.CREATED);
     }
 
+    @PutMapping
+    public ResponseEntity<BookDto> updateBook(@RequestBody @Valid BookDto bookDto) {
+        BookDto returned = bookService.updateBook(bookDto);
+
+        return ResponseEntity.ok(returned);
+    }
+
     @DeleteMapping("/{urlId}")
     public ResponseEntity<String> deleteBook(@PathVariable String urlId) {
         bookService.deleteABook(urlId);

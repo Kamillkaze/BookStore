@@ -29,6 +29,14 @@ public class BookService {
     }
 
     @Transactional
+    public BookDto updateBook(BookDto bookDto) {
+        Book book = bookMapper.toEntity(bookDto);
+        Book inserted = bookRepository.save(book);
+
+        return bookMapper.toDto(inserted);
+    }
+
+    @Transactional
     public void deleteABook(String urlId) {
         int rowsAffected = bookRepository.deleteByUrlId(urlId);
 
