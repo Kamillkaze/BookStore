@@ -2,6 +2,7 @@ package com.bookstore.dto;
 
 import com.bookstore.model.Tag;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class BookDtoBuilder {
@@ -14,6 +15,7 @@ public class BookDtoBuilder {
     private BigDecimal price;
     private boolean favorite;
     private String imageUrl;
+    private LocalDateTime lastModified;
     private List<String> tags;
 
     public BookDtoBuilder id(Long id) {
@@ -56,6 +58,11 @@ public class BookDtoBuilder {
         return this;
     }
 
+    public BookDtoBuilder lastModified(LocalDateTime lastModified) {
+        this.lastModified = lastModified;
+        return this;
+    }
+
     public BookDtoBuilder tags(List<Tag> tags) {
         if (tags != null && !tags.isEmpty()) {
             this.tags = tags.stream().map(Tag::getName).toList();
@@ -74,6 +81,7 @@ public class BookDtoBuilder {
                 this.price,
                 this.favorite,
                 this.imageUrl,
+                this.lastModified,
                 this.tags);
     }
 }

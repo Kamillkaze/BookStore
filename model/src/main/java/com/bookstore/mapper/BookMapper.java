@@ -18,6 +18,7 @@ public class BookMapper {
                 .price(book.getPrice())
                 .favorite(book.isFavorite())
                 .imageUrl(book.getImageUrl())
+                .lastModified(book.getLastModified())
                 .tags(book.getTags())
                 .build();
     }
@@ -32,6 +33,7 @@ public class BookMapper {
                 .price(dto.getPrice())
                 .favorite(dto.isFavorite())
                 .imageUrl(dto.getImageUrl())
+                .lastModified(dto.getLastModified())
                 .build();
     }
 }

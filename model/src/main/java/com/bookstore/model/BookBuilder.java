@@ -2,6 +2,7 @@ package com.bookstore.model;
 
 import com.bookstore.utils.UrlIdGenerator;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class BookBuilder {
@@ -14,6 +15,7 @@ public class BookBuilder {
     private BigDecimal price;
     private boolean favorite;
     private String imageUrl;
+    private LocalDateTime lastModified;
     private List<Tag> tags;
 
     public BookBuilder id(Long id) {
@@ -56,6 +58,11 @@ public class BookBuilder {
         return this;
     }
 
+    public BookBuilder lastModified(LocalDateTime lastModified) {
+        this.lastModified = lastModified;
+        return this;
+    }
+
     public BookBuilder tags(List<Tag> tags) {
         this.tags = tags;
         return this;
@@ -71,6 +78,7 @@ public class BookBuilder {
                 this.price,
                 this.favorite,
                 this.imageUrl,
+                this.lastModified,
                 this.tags);
     }
 }
