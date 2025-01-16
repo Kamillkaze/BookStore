@@ -4,6 +4,8 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
+
+import com.bookstore.exception.CustomTimestampException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -50,5 +52,10 @@ public class ApiExceptionHandler {
             MissingServletRequestParameterException ex) {
         String errorMessage = "Missing request parameter: " + ex.getParameterName();
         return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(CustomTimestampException.class)
+    public ResponseEntity<String> handleCustomTimestampException(CustomTimestampException exception) {
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
 }

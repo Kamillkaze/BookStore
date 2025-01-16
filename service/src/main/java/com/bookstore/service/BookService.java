@@ -1,12 +1,17 @@
 package com.bookstore.service;
 
 import com.bookstore.dto.BookDto;
+import com.bookstore.exception.CustomTimestampException;
 import com.bookstore.mapper.BookMapper;
 import com.bookstore.model.Book;
 import com.bookstore.repository.BookRepository;
 import jakarta.transaction.Transactional;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
+
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,6 +27,11 @@ public class BookService {
 
     @Transactional
     public BookDto addBook(BookDto bookDto) {
+        if (Objects.nonNull(bookDto.getLastModified())) {
+            throw new CustomTimestampException();
+        }
+        bookDto.setLastModified(LocalDateTime.now());
+
         Book book = bookMapper.toEntity(bookDto);
         Book inserted = bookRepository.save(book);
 
@@ -30,6 +40,11 @@ public class BookService {
 
     @Transactional
     public BookDto updateBook(BookDto bookDto) {
+        if (Objects.nonNull(bookDto.getLastModified())) {
+            throw new CustomTimestampException();
+        }
+        bookDto.setLastModified(LocalDateTime.now());
+
         Book book = bookMapper.toEntity(bookDto);
         Book inserted = bookRepository.save(book);
 

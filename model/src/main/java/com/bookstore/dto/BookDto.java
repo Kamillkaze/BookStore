@@ -101,6 +101,10 @@ public class BookDto {
         return tags;
     }
 
+    public void setLastModified(LocalDateTime lastModified) {
+        this.lastModified = lastModified;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
