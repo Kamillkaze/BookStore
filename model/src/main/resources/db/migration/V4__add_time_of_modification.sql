@@ -1,0 +1,2 @@
+ALTER TABLE `book`
+ADD COLUMN `last_modified` TIMESTAMP NOT NULL;
