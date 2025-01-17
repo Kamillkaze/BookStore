@@ -27,10 +27,7 @@ public class BookService {
 
     @Transactional
     public BookDto addBook(BookDto bookDto) {
-        if (Objects.nonNull(bookDto.getLastModified())) {
-            throw new CustomTimestampException();
-        }
-        bookDto.setLastModified(LocalDateTime.now());
+        handleLastModified(bookDto);
 
         Book book = bookMapper.toEntity(bookDto);
         Book inserted = bookRepository.save(book);
@@ -40,10 +37,7 @@ public class BookService {
 
     @Transactional
     public BookDto updateBook(BookDto bookDto) {
-        if (Objects.nonNull(bookDto.getLastModified())) {
-            throw new CustomTimestampException();
-        }
-        bookDto.setLastModified(LocalDateTime.now());
+        handleLastModified(bookDto);
 
         Book book = bookMapper.toEntity(bookDto);
         Book inserted = bookRepository.save(book);
@@ -88,5 +82,12 @@ public class BookService {
 
     private List<BookDto> convertToBookDtoList(List<Book> books) {
         return books.stream().map(bookMapper::toDto).toList();
+    }
+
+    private static void handleLastModified(BookDto bookDto) {
+        if (Objects.nonNull(bookDto.getLastModified())) {
+            throw new CustomTimestampException();
+        }
+        bookDto.setLastModified(LocalDateTime.now());
     }
 }
