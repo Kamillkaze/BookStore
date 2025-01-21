@@ -101,6 +101,10 @@ public class BookDto {
         return tags;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public void setLastModified(LocalDateTime lastModified) {
         this.lastModified = lastModified;
     }

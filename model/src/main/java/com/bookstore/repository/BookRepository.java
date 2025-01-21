@@ -29,4 +29,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 
     @Query("SELECT b FROM Book b LEFT JOIN FETCH b.tags WHERE b.urlId LIKE %:phrase%")
     List<Book> findByUrlIdContainingPhrase(@Param(value = "phrase") String phrase);
+
+    @Query("SELECT b.id FROM Book b WHERE b.urlId = :urlId")
+    Optional<Long> getIdByUrlId(@Param(value = "urlId") String urlId);
 }

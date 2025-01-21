@@ -38,6 +38,9 @@ public class BookService {
     @Transactional
     public BookDto updateBook(BookDto bookDto) {
         handleLastModified(bookDto);
+        Long id = bookRepository.getIdByUrlId(bookDto.getUrlId())
+                .orElseThrow(NoSuchElementException::new);
+        bookDto.setId(id);
 
         Book book = bookMapper.toEntity(bookDto);
         Book inserted = bookRepository.save(book);
