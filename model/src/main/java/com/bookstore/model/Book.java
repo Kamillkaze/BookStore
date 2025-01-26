@@ -149,6 +149,7 @@ public class Book {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, urlId, title, author, stars, price, favorite, imageUrl, lastModified, tags);
+        return Objects.hash(
+                id, urlId, title, author, stars, price, favorite, imageUrl, lastModified, tags);
     }
 }

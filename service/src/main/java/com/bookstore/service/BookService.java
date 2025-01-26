@@ -6,12 +6,10 @@ import com.bookstore.mapper.BookMapper;
 import com.bookstore.model.Book;
 import com.bookstore.repository.BookRepository;
 import jakarta.transaction.Transactional;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
-
 import org.springframework.stereotype.Service;
 
 @Service
@@ -38,8 +36,8 @@ public class BookService {
     @Transactional
     public BookDto updateBook(BookDto bookDto) {
         handleLastModified(bookDto);
-        Long id = bookRepository.getIdByUrlId(bookDto.getUrlId())
-                .orElseThrow(NoSuchElementException::new);
+        Long id =
+                bookRepository.getIdByUrlId(bookDto.getUrlId()).orElseThrow(NoSuchElementException::new);
         bookDto.setId(id);
 
         Book book = bookMapper.toEntity(bookDto);
