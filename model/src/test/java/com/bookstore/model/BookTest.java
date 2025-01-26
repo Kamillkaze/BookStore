@@ -133,8 +133,8 @@ class BookTest {
     @DisplayName(
             "Equals method should return true when comparing two objects with null fields that match")
     void testEqualsWithMatchingNullFields() {
-        Book book1 = new Book(null, "id", "title", "author", null, null, false, null, null);
-        Book book2 = new Book(null, "id", "title", "author", null, null, false, null, null);
+        Book book1 = new Book(null, "id", "title", "author", null, null, false, null, null, null);
+        Book book2 = new Book(null, "id", "title", "author", null, null, false, null, null, null);
 
         assertThat(book1).isEqualTo(book2);
     }
@@ -239,8 +239,8 @@ class BookTest {
     @Test
     @DisplayName("HashCode should work correctly when fields are null")
     void testHashCodeWithNullFields() {
-        Book book1 = new Book(null, "id", "title", "author", null, null, false, null, null);
-        Book book2 = new Book(null, "id", "title", "author", null, null, false, null, null);
+        Book book1 = new Book(null, "id", "title", "author", null, null, false, null, null, null);
+        Book book2 = new Book(null, "id", "title", "author", null, null, false, null, null, null);
 
         assertThat(book1.hashCode()).isEqualTo(book2.hashCode());
     }
