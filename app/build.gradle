@@ -20,6 +20,7 @@ dependencies {
     implementation libs.dotenv.java
     testImplementation libs.spring.boot.test
     testImplementation libs.spring.security.test
+    testImplementation libs.jackson.jsr310
 }
 
 jar {

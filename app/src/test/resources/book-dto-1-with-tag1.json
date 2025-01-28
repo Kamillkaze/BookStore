@@ -1,0 +1,14 @@
+{
+  "id": 1,
+  "urlId": "author-1-title-1",
+  "title": "Title 1",
+  "author": "Author 1",
+  "stars": 2,
+  "price": 2.99,
+  "favorite": false,
+  "imageUrl": "image/1",
+  "lastModified": "2024-03-23T01:34:00",
+  "tags": [
+    "tag1"
+  ]
+}

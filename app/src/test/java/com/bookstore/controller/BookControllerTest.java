@@ -1,12 +1,10 @@
 package com.bookstore.controller;
 
-import static com.bookstore.controller.TestUtils.getDefaultBookDtos;
-import static com.bookstore.controller.TestUtils.getResponses;
+import static com.bookstore.controller.TestUtils.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.*;
 
 import com.bookstore.dto.BookDto;
-import com.bookstore.model.Tag;
 import com.bookstore.security.SecurityConfig;
 import com.bookstore.service.BookService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,6 +12,9 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import javax.sql.DataSource;
+
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -53,6 +54,19 @@ class BookControllerTest {
         public DataSource dataSource() {
             return mock(DataSource.class);
         }
+
+        @Bean
+        public ObjectMapper objectMapper() {
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.registerModule(new JavaTimeModule());
+            mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+            return mapper;
+        }
+
+        @Bean
+        public TestUtils testUtils() {
+            return new TestUtils();
+        }
     }
 
     @MockBean private BookService bookService;
@@ -61,13 +75,16 @@ class BookControllerTest {
 
     @Autowired private ObjectMapper objectMapper;
 
+    @Autowired private TestUtils testUtils;
+
     @Test
     @DisplayName("Should get all books correctly getAllBooks()")
     @WithMockUser
     void shouldGetAllBooksCorrectly() throws Exception {
         BookDto bookDto1 =
-                getDefaultBookDtos().get(BOOK_DTO_1_INDEX).tags(List.of(new Tag("tag1"))).build();
-        BookDto bookDto2 = getDefaultBookDtos().get(BOOK_DTO_2_INDEX).build();
+                testUtils.readJsonFile("src/test/resources/book-dto-1-with-tag1.json", BookDto.class);
+        BookDto bookDto2 =
+                testUtils.readJsonFile("src/test/resources/book-dto-2.json", BookDto.class);
         when(bookService.getAllBooks()).thenReturn(List.of(bookDto1, bookDto2));
         String expected = getResponses().get(ALL_BOOKS_RESPONSE_INDEX);
 
@@ -112,7 +129,7 @@ class BookControllerTest {
     @WithMockUser
     void getBookByIdCorrectly() throws Exception {
         BookDto bookDto =
-                getDefaultBookDtos().get(BOOK_DTO_1_INDEX).tags(List.of(new Tag("tag1"))).build();
+                testUtils.readJsonFile("src/test/resources/book-dto-1-with-tag1.json", BookDto.class);
         String urlId = bookDto.getUrlId();
         when(bookService.getBookById(urlId)).thenReturn(bookDto);
         String expected = getResponses().get(BOOK_BY_ID_RESPONSE_INDEX);
@@ -145,9 +162,10 @@ class BookControllerTest {
     @WithMockUser
     void getBooksByTagCorrect() throws Exception {
         String tagName = "tag1";
-        Tag tag1 = new Tag(tagName);
-        BookDto bookDto1 = getDefaultBookDtos().get(BOOK_DTO_1_INDEX).tags(List.of(tag1)).build();
-        BookDto bookDto2 = getDefaultBookDtos().get(BOOK_DTO_2_INDEX).tags(List.of(tag1)).build();
+        BookDto bookDto1 =
+                testUtils.readJsonFile("src/test/resources/book-dto-1-with-tag1.json", BookDto.class);
+        BookDto bookDto2 =
+                testUtils.readJsonFile("src/test/resources/book-dto-2-with-tag1.json", BookDto.class);
         when(bookService.getAllBooksByTag(tagName)).thenReturn(List.of(bookDto1, bookDto2));
         String expected = getResponses().get(BOOKS_BY_TAG_RESPONSE_INDEX);
 
@@ -180,8 +198,10 @@ class BookControllerTest {
     @WithMockUser
     void getBooksByPhraseCorrect() throws Exception {
         String phrase = "author";
-        BookDto bookDto1 = getDefaultBookDtos().get(BOOK_DTO_1_INDEX).build();
-        BookDto bookDto2 = getDefaultBookDtos().get(BOOK_DTO_2_INDEX).build();
+        BookDto bookDto1 =
+                testUtils.readJsonFile("src/test/resources/book-dto-1.json", BookDto.class);
+        BookDto bookDto2 =
+                testUtils.readJsonFile("src/test/resources/book-dto-2.json", BookDto.class);
         when(bookService.getAllBooksByPhrase(phrase)).thenReturn(List.of(bookDto1, bookDto2));
         String expected = getResponses().get(BOOKS_BY_PHRASE_RESPONSE_INDEX);
 
@@ -256,8 +276,10 @@ class BookControllerTest {
     @DisplayName("Should add a book correctly addBook()")
     @WithMockUser(roles = "ADMIN")
     void addBookCorrect() throws Exception {
-        BookDto bookDto = getDefaultBookDtos().get(BOOK_DTO_NO_URLID_INDEX).build();
-        BookDto created = getDefaultBookDtos().get(BOOK_DTO_1_INDEX).build();
+        BookDto bookDto =
+                testUtils.readJsonFile("src/test/resources/book-dto-1-no-url-id.json", BookDto.class);
+        BookDto created =
+                testUtils.readJsonFile("src/test/resources/book-dto-1.json", BookDto.class);
         String input = objectMapper.writeValueAsString(bookDto);
         String expected = getResponses().get(ADD_BOOK_RESPONSE_INDEX);
         when(bookService.addBook(bookDto)).thenReturn(created);

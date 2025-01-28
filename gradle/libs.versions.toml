@@ -7,6 +7,7 @@ spring-security-test = "6.3.3"
 spotless = "6.25.0"
 flyway-mysql = "10.20.0"
 dotenv-java = "3.0.2"
+jackson-jsr310 = "2.18.2"
 
 [libraries]
 apache-commons = { module = "org.apache.commons:commons-lang3", version.ref = "apache-commons"}
@@ -20,6 +21,8 @@ spring-boot-security = { module = "org.springframework.boot:spring-boot-starter-
 spring-security-test = { module = "org.springframework.security:spring-security-test", version.ref = "spring-security-test" }
 flyway-mysql = { module = "org.flywaydb:flyway-mysql", version.ref = "flyway-mysql" }
 dotenv-java = { module = "io.github.cdimascio:dotenv-java", version.ref = "dotenv-java" }
+jackson-jsr310 = { module = "com.fasterxml.jackson.datatype:jackson-datatype-jsr310", version.ref = "jackson-jsr310" }
+
 
 [plugins]
 spring-boot-plugin = { id = "org.springframework.boot", version.ref = "spring-boot" }
