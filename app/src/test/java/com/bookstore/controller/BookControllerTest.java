@@ -35,17 +35,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 @WebMvcTest(controllers = BookController.class)
 class BookControllerTest {
 
-    public static final int BOOK_DTO_1_INDEX = 0;
-    public static final int BOOK_DTO_2_INDEX = 1;
-    public static final int BODY_DTO_BLANK_PROPERTIES_INDEX = 2;
-    public static final int BOOK_DTO_NO_URLID_INDEX = 3;
-    public static final int ALL_BOOKS_RESPONSE_INDEX = 0;
-    public static final int BOOK_BY_ID_RESPONSE_INDEX = 1;
-    public static final int BOOKS_BY_TAG_RESPONSE_INDEX = 2;
-    public static final int BOOKS_BY_PHRASE_RESPONSE_INDEX = 3;
-    public static final int BLANK_PROPERTIES_RESPONSE_INDEX = 4;
-    public static final int ADD_BOOK_RESPONSE_INDEX = 5;
-
     @TestConfiguration
     static class MockDataSourceConfig {
         @Bean
@@ -84,10 +73,10 @@ class BookControllerTest {
                 testUtils.readJsonFile("book-dto-1-with-tag1.json", BookDto.class);
         BookDto bookDto2 =
                 testUtils.readJsonFile("book-dto-2.json", BookDto.class);
-        when(bookService.getAllBooks()).thenReturn(List.of(bookDto1, bookDto2));
         BookDto[] expectedDto =
                 testUtils.readJsonFile("response-all-books.json", BookDto[].class);
         String expected = objectMapper.writeValueAsString(expectedDto);
+        when(bookService.getAllBooks()).thenReturn(List.of(bookDto1, bookDto2));
 
         RequestBuilder request = MockMvcRequestBuilders.get("/api/v1/books");
         MvcResult result = mockMvc.perform(request).andReturn();
@@ -131,11 +120,11 @@ class BookControllerTest {
     void getBookByIdCorrectly() throws Exception {
         BookDto bookDto =
                 testUtils.readJsonFile("book-dto-1-with-tag1.json", BookDto.class);
-        String urlId = bookDto.getUrlId();
-        when(bookService.getBookById(urlId)).thenReturn(bookDto);
         BookDto expectedDto =
                 testUtils.readJsonFile("response-book-by-id.json", BookDto.class);
         String expected = objectMapper.writeValueAsString(expectedDto);
+        String urlId = bookDto.getUrlId();
+        when(bookService.getBookById(urlId)).thenReturn(bookDto);
 
         RequestBuilder request = MockMvcRequestBuilders.get("/api/v1/books/" + urlId);
         MvcResult result = mockMvc.perform(request).andReturn();
@@ -150,8 +139,8 @@ class BookControllerTest {
     @WithMockUser
     void getBooksByTagWhenTagNotExist() throws Exception {
         String tagName = "tag1";
-        when(bookService.getAllBooksByTag(tagName)).thenReturn(List.of());
         String expected = "[]";
+        when(bookService.getAllBooksByTag(tagName)).thenReturn(List.of());
 
         RequestBuilder request = MockMvcRequestBuilders.get("/api/v1/books/tag/" + tagName);
         MvcResult result = mockMvc.perform(request).andReturn();
@@ -169,10 +158,10 @@ class BookControllerTest {
                 testUtils.readJsonFile("book-dto-1-with-tag1.json", BookDto.class);
         BookDto bookDto2 =
                 testUtils.readJsonFile("book-dto-2-with-tag1.json", BookDto.class);
-        when(bookService.getAllBooksByTag(tagName)).thenReturn(List.of(bookDto1, bookDto2));
         BookDto[] expectedDto =
                 testUtils.readJsonFile("response-books-by-tag.json", BookDto[].class);
         String expected = objectMapper.writeValueAsString(expectedDto);
+        when(bookService.getAllBooksByTag(tagName)).thenReturn(List.of(bookDto1, bookDto2));
 
         RequestBuilder request = MockMvcRequestBuilders.get("/api/v1/books/tag/" + tagName);
         MvcResult result = mockMvc.perform(request).andReturn();
@@ -187,8 +176,8 @@ class BookControllerTest {
     @WithMockUser
     void getBooksByPhraseWhenPhraseNotExists() throws Exception {
         String phrase = "tag1";
-        when(bookService.getAllBooksByPhrase(phrase)).thenReturn(List.of());
         String expected = "[]";
+        when(bookService.getAllBooksByPhrase(phrase)).thenReturn(List.of());
 
         RequestBuilder request = MockMvcRequestBuilders.get("/api/v1/books/phrase/" + phrase);
         MvcResult result = mockMvc.perform(request).andReturn();
@@ -209,8 +198,8 @@ class BookControllerTest {
                 testUtils.readJsonFile("book-dto-2.json", BookDto.class);
         BookDto[] expectedDto =
                 testUtils.readJsonFile("response-books-by-phrase.json", BookDto[].class);
-        when(bookService.getAllBooksByPhrase(phrase)).thenReturn(List.of(bookDto1, bookDto2));
         String expected = objectMapper.writeValueAsString(expectedDto);
+        when(bookService.getAllBooksByPhrase(phrase)).thenReturn(List.of(bookDto1, bookDto2));
 
         RequestBuilder request = MockMvcRequestBuilders.get("/api/v1/books/phrase/" + phrase);
         MvcResult result = mockMvc.perform(request).andReturn();
