@@ -1,6 +1,5 @@
 package com.bookstore.controller;
 
-import static com.bookstore.controller.TestUtils.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.*;
 
@@ -82,11 +81,13 @@ class BookControllerTest {
     @WithMockUser
     void shouldGetAllBooksCorrectly() throws Exception {
         BookDto bookDto1 =
-                testUtils.readJsonFile("src/test/resources/book-dto-1-with-tag1.json", BookDto.class);
+                testUtils.readJsonFile("book-dto-1-with-tag1.json", BookDto.class);
         BookDto bookDto2 =
-                testUtils.readJsonFile("src/test/resources/book-dto-2.json", BookDto.class);
+                testUtils.readJsonFile("book-dto-2.json", BookDto.class);
         when(bookService.getAllBooks()).thenReturn(List.of(bookDto1, bookDto2));
-        String expected = getResponses().get(ALL_BOOKS_RESPONSE_INDEX);
+        BookDto[] expectedDto =
+                testUtils.readJsonFile("response-all-books.json", BookDto[].class);
+        String expected = objectMapper.writeValueAsString(expectedDto);
 
         RequestBuilder request = MockMvcRequestBuilders.get("/api/v1/books");
         MvcResult result = mockMvc.perform(request).andReturn();
@@ -129,10 +130,12 @@ class BookControllerTest {
     @WithMockUser
     void getBookByIdCorrectly() throws Exception {
         BookDto bookDto =
-                testUtils.readJsonFile("src/test/resources/book-dto-1-with-tag1.json", BookDto.class);
+                testUtils.readJsonFile("book-dto-1-with-tag1.json", BookDto.class);
         String urlId = bookDto.getUrlId();
         when(bookService.getBookById(urlId)).thenReturn(bookDto);
-        String expected = getResponses().get(BOOK_BY_ID_RESPONSE_INDEX);
+        BookDto expectedDto =
+                testUtils.readJsonFile("response-book-by-id.json", BookDto.class);
+        String expected = objectMapper.writeValueAsString(expectedDto);
 
         RequestBuilder request = MockMvcRequestBuilders.get("/api/v1/books/" + urlId);
         MvcResult result = mockMvc.perform(request).andReturn();
@@ -163,11 +166,13 @@ class BookControllerTest {
     void getBooksByTagCorrect() throws Exception {
         String tagName = "tag1";
         BookDto bookDto1 =
-                testUtils.readJsonFile("src/test/resources/book-dto-1-with-tag1.json", BookDto.class);
+                testUtils.readJsonFile("book-dto-1-with-tag1.json", BookDto.class);
         BookDto bookDto2 =
-                testUtils.readJsonFile("src/test/resources/book-dto-2-with-tag1.json", BookDto.class);
+                testUtils.readJsonFile("book-dto-2-with-tag1.json", BookDto.class);
         when(bookService.getAllBooksByTag(tagName)).thenReturn(List.of(bookDto1, bookDto2));
-        String expected = getResponses().get(BOOKS_BY_TAG_RESPONSE_INDEX);
+        BookDto[] expectedDto =
+                testUtils.readJsonFile("response-books-by-tag.json", BookDto[].class);
+        String expected = objectMapper.writeValueAsString(expectedDto);
 
         RequestBuilder request = MockMvcRequestBuilders.get("/api/v1/books/tag/" + tagName);
         MvcResult result = mockMvc.perform(request).andReturn();
@@ -199,11 +204,13 @@ class BookControllerTest {
     void getBooksByPhraseCorrect() throws Exception {
         String phrase = "author";
         BookDto bookDto1 =
-                testUtils.readJsonFile("src/test/resources/book-dto-1.json", BookDto.class);
+                testUtils.readJsonFile("book-dto-1.json", BookDto.class);
         BookDto bookDto2 =
-                testUtils.readJsonFile("src/test/resources/book-dto-2.json", BookDto.class);
+                testUtils.readJsonFile("book-dto-2.json", BookDto.class);
+        BookDto[] expectedDto =
+                testUtils.readJsonFile("response-books-by-phrase.json", BookDto[].class);
         when(bookService.getAllBooksByPhrase(phrase)).thenReturn(List.of(bookDto1, bookDto2));
-        String expected = getResponses().get(BOOKS_BY_PHRASE_RESPONSE_INDEX);
+        String expected = objectMapper.writeValueAsString(expectedDto);
 
         RequestBuilder request = MockMvcRequestBuilders.get("/api/v1/books/phrase/" + phrase);
         MvcResult result = mockMvc.perform(request).andReturn();
@@ -216,9 +223,10 @@ class BookControllerTest {
     @DisplayName("Should return error when body not valid addBook()")
     @WithMockUser(roles = "ADMIN")
     void addBookWhenBodyStateNotValid() throws Exception {
-        BookDto bookDto = getDefaultBookDtos().get(BODY_DTO_BLANK_PROPERTIES_INDEX).build();
+        BookDto bookDto =
+                testUtils.readJsonFile("book-dto-blank-properties.json", BookDto.class);
         String input = objectMapper.writeValueAsString(bookDto);
-        String expected = getResponses().get(BLANK_PROPERTIES_RESPONSE_INDEX);
+        String expected = "{\"author\":\"Author should not be blank\",\"title\":\"Title should not be blank\"}";
 
         RequestBuilder request =
                 MockMvcRequestBuilders.post("/api/v1/books")
@@ -252,7 +260,8 @@ class BookControllerTest {
             "Should return error when trying to add an entity with already existing author and title (results in duplicated urlId) addBook()")
     @WithMockUser(roles = "ADMIN")
     void addBookWhenDuplicatedId() throws Exception {
-        BookDto bookDto = getDefaultBookDtos().get(BOOK_DTO_1_INDEX).build();
+        BookDto bookDto =
+                testUtils.readJsonFile("book-dto-1.json", BookDto.class);
         String input = objectMapper.writeValueAsString(bookDto);
         String errorMessage = "could not execute statement [Duplicate entry";
         Mockito.doAnswer(
@@ -277,11 +286,13 @@ class BookControllerTest {
     @WithMockUser(roles = "ADMIN")
     void addBookCorrect() throws Exception {
         BookDto bookDto =
-                testUtils.readJsonFile("src/test/resources/book-dto-1-no-url-id.json", BookDto.class);
+                testUtils.readJsonFile("book-dto-1-no-url-id.json", BookDto.class);
         BookDto created =
-                testUtils.readJsonFile("src/test/resources/book-dto-1.json", BookDto.class);
+                testUtils.readJsonFile("book-dto-1.json", BookDto.class);
+        BookDto expectedDto =
+                testUtils.readJsonFile("response-add-book.json", BookDto.class);
         String input = objectMapper.writeValueAsString(bookDto);
-        String expected = getResponses().get(ADD_BOOK_RESPONSE_INDEX);
+        String expected = objectMapper.writeValueAsString(expectedDto);
         when(bookService.addBook(bookDto)).thenReturn(created);
 
         RequestBuilder request =
