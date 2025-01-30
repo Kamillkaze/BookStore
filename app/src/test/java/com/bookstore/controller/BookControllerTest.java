@@ -7,13 +7,12 @@ import com.bookstore.dto.BookDto;
 import com.bookstore.security.SecurityConfig;
 import com.bookstore.service.BookService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import javax.sql.DataSource;
-
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -69,12 +68,9 @@ class BookControllerTest {
     @DisplayName("Should get all books correctly getAllBooks()")
     @WithMockUser
     void shouldGetAllBooksCorrectly() throws Exception {
-        BookDto bookDto1 =
-                testUtils.readJsonFile("book-dto-1-with-tag1.json", BookDto.class);
-        BookDto bookDto2 =
-                testUtils.readJsonFile("book-dto-2.json", BookDto.class);
-        BookDto[] expectedDto =
-                testUtils.readJsonFile("response-all-books.json", BookDto[].class);
+        BookDto bookDto1 = testUtils.readJsonFile("book-dto-1-with-tag1.json", BookDto.class);
+        BookDto bookDto2 = testUtils.readJsonFile("book-dto-2.json", BookDto.class);
+        BookDto[] expectedDto = testUtils.readJsonFile("response-all-books.json", BookDto[].class);
         String expected = objectMapper.writeValueAsString(expectedDto);
         when(bookService.getAllBooks()).thenReturn(List.of(bookDto1, bookDto2));
 
@@ -118,10 +114,8 @@ class BookControllerTest {
     @DisplayName("Should return a book by id correctly getBookById()")
     @WithMockUser
     void getBookByIdCorrectly() throws Exception {
-        BookDto bookDto =
-                testUtils.readJsonFile("book-dto-1-with-tag1.json", BookDto.class);
-        BookDto expectedDto =
-                testUtils.readJsonFile("response-book-by-id.json", BookDto.class);
+        BookDto bookDto = testUtils.readJsonFile("book-dto-1-with-tag1.json", BookDto.class);
+        BookDto expectedDto = testUtils.readJsonFile("response-book-by-id.json", BookDto.class);
         String expected = objectMapper.writeValueAsString(expectedDto);
         String urlId = bookDto.getUrlId();
         when(bookService.getBookById(urlId)).thenReturn(bookDto);
@@ -154,12 +148,9 @@ class BookControllerTest {
     @WithMockUser
     void getBooksByTagCorrect() throws Exception {
         String tagName = "tag1";
-        BookDto bookDto1 =
-                testUtils.readJsonFile("book-dto-1-with-tag1.json", BookDto.class);
-        BookDto bookDto2 =
-                testUtils.readJsonFile("book-dto-2-with-tag1.json", BookDto.class);
-        BookDto[] expectedDto =
-                testUtils.readJsonFile("response-books-by-tag.json", BookDto[].class);
+        BookDto bookDto1 = testUtils.readJsonFile("book-dto-1-with-tag1.json", BookDto.class);
+        BookDto bookDto2 = testUtils.readJsonFile("book-dto-2-with-tag1.json", BookDto.class);
+        BookDto[] expectedDto = testUtils.readJsonFile("response-books-by-tag.json", BookDto[].class);
         String expected = objectMapper.writeValueAsString(expectedDto);
         when(bookService.getAllBooksByTag(tagName)).thenReturn(List.of(bookDto1, bookDto2));
 
@@ -192,10 +183,8 @@ class BookControllerTest {
     @WithMockUser
     void getBooksByPhraseCorrect() throws Exception {
         String phrase = "author";
-        BookDto bookDto1 =
-                testUtils.readJsonFile("book-dto-1.json", BookDto.class);
-        BookDto bookDto2 =
-                testUtils.readJsonFile("book-dto-2.json", BookDto.class);
+        BookDto bookDto1 = testUtils.readJsonFile("book-dto-1.json", BookDto.class);
+        BookDto bookDto2 = testUtils.readJsonFile("book-dto-2.json", BookDto.class);
         BookDto[] expectedDto =
                 testUtils.readJsonFile("response-books-by-phrase.json", BookDto[].class);
         String expected = objectMapper.writeValueAsString(expectedDto);
@@ -212,10 +201,10 @@ class BookControllerTest {
     @DisplayName("Should return error when body not valid addBook()")
     @WithMockUser(roles = "ADMIN")
     void addBookWhenBodyStateNotValid() throws Exception {
-        BookDto bookDto =
-                testUtils.readJsonFile("book-dto-blank-properties.json", BookDto.class);
+        BookDto bookDto = testUtils.readJsonFile("book-dto-blank-properties.json", BookDto.class);
         String input = objectMapper.writeValueAsString(bookDto);
-        String expected = "{\"author\":\"Author should not be blank\",\"title\":\"Title should not be blank\"}";
+        String expected =
+                "{\"author\":\"Author should not be blank\",\"title\":\"Title should not be blank\"}";
 
         RequestBuilder request =
                 MockMvcRequestBuilders.post("/api/v1/books")
@@ -249,8 +238,7 @@ class BookControllerTest {
             "Should return error when trying to add an entity with already existing author and title (results in duplicated urlId) addBook()")
     @WithMockUser(roles = "ADMIN")
     void addBookWhenDuplicatedId() throws Exception {
-        BookDto bookDto =
-                testUtils.readJsonFile("book-dto-1.json", BookDto.class);
+        BookDto bookDto = testUtils.readJsonFile("book-dto-1.json", BookDto.class);
         String input = objectMapper.writeValueAsString(bookDto);
         String errorMessage = "could not execute statement [Duplicate entry";
         Mockito.doAnswer(
@@ -274,12 +262,9 @@ class BookControllerTest {
     @DisplayName("Should add a book correctly addBook()")
     @WithMockUser(roles = "ADMIN")
     void addBookCorrect() throws Exception {
-        BookDto bookDto =
-                testUtils.readJsonFile("book-dto-1-no-url-id.json", BookDto.class);
-        BookDto created =
-                testUtils.readJsonFile("book-dto-1.json", BookDto.class);
-        BookDto expectedDto =
-                testUtils.readJsonFile("response-add-book.json", BookDto.class);
+        BookDto bookDto = testUtils.readJsonFile("book-dto-1-no-url-id.json", BookDto.class);
+        BookDto created = testUtils.readJsonFile("book-dto-1.json", BookDto.class);
+        BookDto expectedDto = testUtils.readJsonFile("response-add-book.json", BookDto.class);
         String input = objectMapper.writeValueAsString(bookDto);
         String expected = objectMapper.writeValueAsString(expectedDto);
         when(bookService.addBook(bookDto)).thenReturn(created);
