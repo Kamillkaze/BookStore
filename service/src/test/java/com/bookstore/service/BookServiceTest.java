@@ -8,10 +8,15 @@ import static org.mockito.Mockito.when;
 
 import com.bookstore.dto.BookDto;
 import com.bookstore.dto.BookDtoBuilder;
+import com.bookstore.exception.CustomTimestampException;
 import com.bookstore.mapper.BookMapper;
 import com.bookstore.model.Book;
 import com.bookstore.model.BookBuilder;
 import com.bookstore.repository.BookRepository;
+import java.time.Clock;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -20,6 +25,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
@@ -30,6 +36,9 @@ class BookServiceTest {
     @Mock private BookRepository bookRepository;
 
     @Mock private BookMapper bookMapper;
+
+    @Spy
+    private Clock clock = Clock.fixed(Instant.parse("2024-02-26T10:00:00Z"), ZoneId.systemDefault());
 
     @Test
     @DisplayName("Should add book correctly")
@@ -61,6 +70,17 @@ class BookServiceTest {
         verify(bookMapper).toEntity(bookDto);
         verify(bookRepository).save(book);
         verify(bookMapper).toDto(bookSaved);
+    }
+
+    @Test
+    @DisplayName("Should throw for adding book when custom time passed")
+    void addBookWhenCustomTimePassed() {
+        BookDto book = new BookDtoBuilder().lastModified(LocalDateTime.now()).build();
+
+        assertThatThrownBy(() -> bookService.addBook(book))
+                .isInstanceOf(CustomTimestampException.class)
+                .hasMessage(
+                        "Timestamps are generated automatically and should not be passed in request body");
     }
 
     @Test

@@ -6,6 +6,7 @@ import com.bookstore.mapper.BookMapper;
 import com.bookstore.model.Book;
 import com.bookstore.repository.BookRepository;
 import jakarta.transaction.Transactional;
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -17,10 +18,12 @@ public class BookService {
 
     private final BookRepository bookRepository;
     private final BookMapper bookMapper;
+    private final Clock clock;
 
-    public BookService(BookRepository bookRepository, BookMapper bookMapper) {
+    public BookService(BookRepository bookRepository, BookMapper bookMapper, Clock clock) {
         this.bookRepository = bookRepository;
         this.bookMapper = bookMapper;
+        this.clock = clock;
     }
 
     @Transactional
@@ -85,10 +88,10 @@ public class BookService {
         return books.stream().map(bookMapper::toDto).toList();
     }
 
-    private static void handleLastModified(BookDto bookDto) {
+    private void handleLastModified(BookDto bookDto) {
         if (Objects.nonNull(bookDto.getLastModified())) {
             throw new CustomTimestampException();
         }
-        bookDto.setLastModified(LocalDateTime.now());
+        bookDto.setLastModified(LocalDateTime.now(clock));
     }
 }
