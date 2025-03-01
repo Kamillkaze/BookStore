@@ -59,7 +59,7 @@ class BookServiceTest {
                         .author("author1")
                         .title("title1")
                         .build();
-        Book book = new Book("author1-title1", "author1", "title1");
+        Book book = new Book("author1-title1", "title1", "author1");
         when(bookMapper.toEntity(bookDto)).thenReturn(book);
         when(bookRepository.save(book)).thenReturn(bookSaved);
         when(bookMapper.toDto(bookSaved)).thenReturn(expected);
@@ -81,6 +81,66 @@ class BookServiceTest {
                 .isInstanceOf(CustomTimestampException.class)
                 .hasMessage(
                         "Timestamps are generated automatically and should not be passed in request body");
+    }
+
+    @Test
+    @DisplayName("Should save correct date when adding new book")
+    void addBookShouldSetLastModifiedAndSaveBook() {
+        BookDto dto = new BookDto();
+
+        LocalDateTime expectedTimestamp = LocalDateTime.now(clock);
+
+        Book bookEntity = new Book();
+        Book savedBook = new Book();
+        BookDto expectedDto = new BookDto();
+        expectedDto.setLastModified(expectedTimestamp);
+
+        when(bookMapper.toEntity(dto)).thenReturn(bookEntity);
+        when(bookRepository.save(bookEntity)).thenReturn(savedBook);
+        when(bookMapper.toDto(savedBook)).thenReturn(expectedDto);
+
+        BookDto result = bookService.addBook(dto);
+
+        assertThat(result.getLastModified()).isEqualTo(expectedTimestamp);
+        verify(bookMapper).toEntity(dto);
+        verify(bookRepository).save(bookEntity);
+        verify(bookMapper).toDto(savedBook);
+    }
+
+    @Test
+    @DisplayName("Should throw for updating a book when custom time passed")
+    void updateBookWhenCustomTimePassed() {
+        BookDto book = new BookDtoBuilder().lastModified(LocalDateTime.now()).build();
+
+        assertThatThrownBy(() -> bookService.updateBook(book))
+                .isInstanceOf(CustomTimestampException.class)
+                .hasMessage(
+                        "Timestamps are generated automatically and should not be passed in request body");
+    }
+
+    @Test
+    @DisplayName("Should save correct date when updating a book")
+    void updateBookShouldSetLastModifiedAndSaveBook() {
+        BookDto dto = new BookDtoBuilder().urlId("author-title").build();
+
+        LocalDateTime expectedTimestamp = LocalDateTime.now(clock);
+
+        Book bookEntity = new Book();
+        Book savedBook = new Book();
+        BookDto expectedDto = new BookDto();
+        expectedDto.setLastModified(expectedTimestamp);
+
+        when(bookMapper.toEntity(dto)).thenReturn(bookEntity);
+        when(bookRepository.save(bookEntity)).thenReturn(savedBook);
+        when(bookMapper.toDto(savedBook)).thenReturn(expectedDto);
+        when(bookRepository.getIdByUrlId(dto.getUrlId())).thenReturn(Optional.of(1L));
+
+        BookDto result = bookService.updateBook(dto);
+
+        assertThat(result.getLastModified()).isEqualTo(expectedTimestamp);
+        verify(bookMapper).toEntity(dto);
+        verify(bookRepository).save(bookEntity);
+        verify(bookMapper).toDto(savedBook);
     }
 
     @Test
