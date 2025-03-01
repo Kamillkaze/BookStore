@@ -38,7 +38,7 @@ class BookServiceTest {
     @Mock private BookMapper bookMapper;
 
     @Spy
-    private Clock clock = Clock.fixed(Instant.parse("2024-02-26T10:00:00Z"), ZoneId.systemDefault());
+    private Clock clock = Clock.fixed(Instant.parse("2024-02-26T10:00:00Z"), ZoneId.of("Europe/Berlin"));
 
     @Test
     @DisplayName("Should add book correctly")
